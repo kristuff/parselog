@@ -18,9 +18,6 @@
 
 namespace Kristuff\Parselog;
 
-use Kristuff\Parselog\LogParser;
-use Kristuff\Parselog\Core\LogEntryFactoryInterface;
-
 /**
  * Sample log line (fail2ban v0.10.2)
  * 2020-08-15 10:11:15,839 fail2ban.actions        [6924]: NOTICE  [_apache_hack] Ban 51.159.19.61

@@ -18,8 +18,6 @@
 
 namespace Kristuff\Parselog;
 
-use Kristuff\Parselog\LogParser;
-
 class ApacheAccessLogParser extends LogParser
 {
     /** 

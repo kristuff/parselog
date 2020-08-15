@@ -1,6 +1,6 @@
 <phpunit
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
+   xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.5/phpunit.xsd"
    colors="true"
    stopOnError="false"
    stopOnFailure="false">
@@ -8,10 +8,10 @@
     <testsuite name="Core">
       <directory>tests/</directory>
     </testsuite>
- </testsuites>
- <filter>
-   <whitelist processUncoveredFilesFromWhitelist="true">
+  </testsuites>
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
       <directory suffix=".php">src/</directory>
-   </whitelist>
+    </whitelist>
   </filter>
 </phpunit>
