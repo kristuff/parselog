@@ -18,11 +18,16 @@
 
 namespace Kristuff\Parselog\Core;
 
-use Kristuff\Parselog\LogParser;
-
 class LogEntryFactory implements LogEntryFactoryInterface
 {
-    
+    /**
+     * Creates and return an object that extends LogEntryInterface with given data
+     * 
+     * @access public
+     * @param array     $data        
+     * 
+     * @return \Kristuff\Parselog\Core\LogEntryInterface
+     */
     public function create(array $data): LogEntryInterface
     {
         $entry = new LogEntry();

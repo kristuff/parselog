@@ -18,9 +18,15 @@
 
 namespace Kristuff\Parselog\Core;
 
-use Kristuff\Parselog\LogParser;
-
 interface LogEntryFactoryInterface
 {
+    /**
+     * Creates and return an object that extends LogEntryInterface with given data
+     * 
+     * @access public
+     * @param array     $data        
+     * 
+     * @return \Kristuff\Parselog\Core\LogEntryInterface
+     */
     public function create(array $data): LogEntryInterface;
 }

@@ -19,7 +19,6 @@
 namespace Kristuff\Parselog;
 
 use Kristuff\Parselog\LogParser;
-use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 
 class SyslogParser extends LogParser
 {
@@ -28,7 +27,7 @@ class SyslogParser extends LogParser
      */
     public $defaultFormat = '%t %h %p %m';
 
-     /** 
+    /** 
      * @var array 
      */
     public $patterns = [

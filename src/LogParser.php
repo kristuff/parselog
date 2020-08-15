@@ -22,7 +22,6 @@ use Kristuff\Parselog\Core\LogFormat;
 use Kristuff\Parselog\Core\LogEntryInterface;
 use Kristuff\Parselog\Core\LogEntryFactory;
 use Kristuff\Parselog\Core\LogEntryFactoryInterface;
-use Kristuff\Parselog;
 
 /** 
  * LogParser
@@ -110,14 +109,19 @@ class LogParser
      */
     public function parse(string $line): LogEntryInterface
     {
-        if (!preg_match($this->pcreFormat, $line, $matches)) {
+        if (!preg_match($this->getPCRE(), $line, $matches)) {
             throw new FormatException($line);
         }
 
         return $this->factory->create($matches);
     }
 
-    //todo
+    /**
+     * Gets the PCRE filter.
+     * 
+     * @access public
+     * @return string
+     */
     public function getPCRE(): string
     {
         return (string) $this->pcreFormat;
@@ -125,7 +129,9 @@ class LogParser
 
     /**
      * Replaces {{PATTERN_IP_ALL}} with the IPV4/6 patterns.
-     * //todo
+     * 
+     * @access public
+     * @return void
      */
     private function updateIpPatterns(): void
     {
