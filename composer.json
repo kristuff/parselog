@@ -1,0 +1,26 @@
+{
+    "name": "kristuff/parselog",
+    "description": "Parse log library",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kristuff",
+            "homepage": "https://github.com/kristuff"
+        }
+    ],
+    "require": {
+        "php": ">=7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5 || ^8"
+    },
+    "autoload": {
+        "psr-4": {"Kristuff\\Parselog\\": "src/"}
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kristuff\\Parselog\\Tests\\": "tests/"
+        }
+    }
+}
