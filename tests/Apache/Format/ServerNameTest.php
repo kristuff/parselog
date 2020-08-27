@@ -2,9 +2,7 @@
 
 namespace Kristuff\Parselog\Tests\Apache\Format;
 
-use Kristuff\Parselog\ApacheAccessLogParser;
 use Kristuff\Parselog\Tests\Provider\HostName as HostNameProvider;
-use Kristuff\Parselog\ApacheAccessLogFormat;
 
 /**
  * @format %V

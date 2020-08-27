@@ -3,7 +3,6 @@
 namespace Kristuff\Parselog\Tests\Apache\Format;
 
 use Kristuff\Parselog\ApacheAccessLogParser;
-use Kristuff\Parselog\ApacheAccessLogFormat;
 
 /**
  * @format %D

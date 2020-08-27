@@ -4,7 +4,7 @@ namespace Kristuff\Parselog\Tests\Apache\Format;
 
 use Kristuff\Parselog\ApacheAccessLogParser;
 use Kristuff\Parselog\Tests\Provider\PositiveInteger as PositiveIntegerProvider;
-use Kristuff\Parselog\ApacheAccessLogFormat;
+
 
 /**
  * @format %O

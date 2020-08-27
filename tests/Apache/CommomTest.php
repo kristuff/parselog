@@ -3,7 +3,7 @@
 namespace Kristuff\Parselog\Tests\Apache;
 
 use Kristuff\Parselog\ApacheAccessLogParser;
-use Kristuff\Parselog\ApacheAccessLogFormat;
+
 
 class CommomTest extends \PHPUnit\Framework\TestCase
 {
