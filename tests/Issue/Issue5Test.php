@@ -20,7 +20,7 @@ class Issue5Test extends \PHPUnit\Framework\TestCase
         $this->assertEquals('OPTIONS * HTTP/1.0', $entry->request);
         $this->assertEquals('200', $entry->status);
         $this->assertEquals('126', $entry->sentBytes);
-        $this->assertEquals('-', $entry->HeaderReferer);
-        $this->assertEquals('Apache/2.2.22 (Ubuntu) (internal dummy connection)', $entry->HeaderUserAgent);
+        $this->assertEquals('-', $entry->headerReferer);
+        $this->assertEquals('Apache/2.2.22 (Ubuntu) (internal dummy connection)', $entry->headerUseragent);
     }
 }

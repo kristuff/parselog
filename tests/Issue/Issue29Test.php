@@ -20,8 +20,8 @@ class Issue29Test extends \PHPUnit\Framework\TestCase
         $this->assertEquals('GET / HTTP/1.1', $entry->request);
         $this->assertEquals('200', $entry->status);
         $this->assertEquals('799', $entry->sentBytes);
-        $this->assertEquals('-', $entry->HeaderReferer);
-        $this->assertEquals('curl/7.47.0', $entry->HeaderUserAgent);
+        $this->assertEquals('-', $entry->headerReferer);
+        $this->assertEquals('curl/7.47.0', $entry->headerUseragent);
     }
 
     public function testAuthUserAndCustomFormatUsingDots()

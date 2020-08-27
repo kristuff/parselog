@@ -2,9 +2,6 @@
 
 namespace Kristuff\Parselog\Tests;
 
-use Kristuff\Parselog\ApacheAccessLogParser;
-use Kristuff\Parselog\ApacheAccessLogFormat;
-
 class CombinedTest extends \PHPUnit\Framework\TestCase
 {
     public function testCombinedFormat()
@@ -19,10 +16,7 @@ class CombinedTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('GET /electronics/cameras/accessories/universal-camera-charger HTTP/1.1', $entry->request);
         $this->assertEquals('200', $entry->status);
         $this->assertEquals('12347', $entry->sentBytes);
-        $this->assertEquals('-', $entry->HeaderReferer);
-        $this->assertEquals('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', $entry->HeaderUserAgent);
-
-
+        $this->assertEquals('-', $entry->headerReferer);
+        $this->assertEquals('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', $entry->headerUseragent);
     }
-
 }

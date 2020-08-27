@@ -2,9 +2,6 @@
 
 namespace Kristuff\Parselog\Tests;
 
-use Kristuff\Parselog\ApacheAccessLogParser;
-use Kristuff\Parselog\ApacheAccessLogFormat;
-
 class CreateEntryTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateEntryMocked()

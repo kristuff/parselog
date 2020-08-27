@@ -2,9 +2,6 @@
 
 namespace Kristuff\Parselog\Tests;
 
-use Kristuff\Parselog\ApacheAccessLogParser;
-use Kristuff\Parselog\LogFormats;
-
 class Fail2BanTest extends \PHPUnit\Framework\TestCase
 {
     public function testFormat1()

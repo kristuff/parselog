@@ -19,8 +19,8 @@ class CombinedTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('GET / HTTP/1.1', $entry->request);
         $this->assertEquals('200', $entry->status);
         $this->assertEquals('9726', $entry->sentBytes);
-        $this->assertEquals('-', $entry->HeaderReferer);
-        $this->assertEquals('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.65 Safari/537.36', $entry->HeaderUserAgent);
+        $this->assertEquals('-', $entry->headerReferer);
+        $this->assertEquals('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.65 Safari/537.36', $entry->headerUseragent);
 
         $entry = $parser->parse('177.3.137.13 - - [11/Sep/2013:22:46:36 +0000] "GET /media/css/fe0e1ba295680ef4c59ccc987fca2371.css HTTP/1.1" 200 36861 "http://ecommerce.dev/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.65 Safari/537.36"');
         $this->assertEquals('177.3.137.13', $entry->host);
@@ -30,8 +30,8 @@ class CombinedTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('GET /media/css/fe0e1ba295680ef4c59ccc987fca2371.css HTTP/1.1', $entry->request);
         $this->assertEquals('200', $entry->status);
         $this->assertEquals('36861', $entry->sentBytes);
-        $this->assertEquals('http://ecommerce.dev/', $entry->HeaderReferer);
-        $this->assertEquals('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.65 Safari/537.36', $entry->HeaderUserAgent);
+        $this->assertEquals('http://ecommerce.dev/', $entry->headerReferer);
+        $this->assertEquals('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.65 Safari/537.36', $entry->headerUseragent);
 
         $entry = $parser->parse('66.249.66.207 - - [11/Sep/2013:22:46:47 +0000] "GET /robots.txt HTTP/1.1" 503 1041 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"');
         $this->assertEquals('66.249.66.207', $entry->host);
@@ -41,8 +41,8 @@ class CombinedTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('GET /robots.txt HTTP/1.1', $entry->request);
         $this->assertEquals('503', $entry->status);
         $this->assertEquals('1041', $entry->sentBytes);
-        $this->assertEquals('-', $entry->HeaderReferer);
-        $this->assertEquals('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', $entry->HeaderUserAgent);
+        $this->assertEquals('-', $entry->headerReferer);
+        $this->assertEquals('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', $entry->headerUseragent);
 
         $entry = $parser->parse('177.3.137.13 - - [11/Sep/2013:19:22:43 +0000] "-" 408 0 "-" "-"');
         $this->assertEquals('177.3.137.13', $entry->host);
@@ -52,8 +52,8 @@ class CombinedTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('-', $entry->request);
         $this->assertEquals('408', $entry->status);
         $this->assertEquals('0', $entry->sentBytes);
-        $this->assertEquals('-', $entry->HeaderReferer);
-        $this->assertEquals('-', $entry->HeaderUserAgent);
+        $this->assertEquals('-', $entry->headerReferer);
+        $this->assertEquals('-', $entry->headerUseragent);
 
         $entry = $parser->parse('54.232.125.255 - - [07/Oct/2013:04:14:01 +0000] "" 400 0 "-" "-"');
         $this->assertEquals('54.232.125.255', $entry->host);
@@ -63,8 +63,8 @@ class CombinedTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('', $entry->request);
         $this->assertEquals('400', $entry->status);
         $this->assertEquals('0', $entry->sentBytes);
-        $this->assertEquals('-', $entry->HeaderReferer);
-        $this->assertEquals('-', $entry->HeaderUserAgent);
+        $this->assertEquals('-', $entry->headerReferer);
+        $this->assertEquals('-', $entry->headerUseragent);
     }
 
     public function testHttp2Format()
@@ -81,7 +81,7 @@ class CombinedTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('GET / HTTP/2.0', $entry->request);
         $this->assertEquals('200', $entry->status);
         $this->assertEquals('10701', $entry->sentBytes);
-        $this->assertEquals('-', $entry->HeaderReferer);
-        $this->assertEquals('curl/7.54.1', $entry->HeaderUserAgent);
+        $this->assertEquals('-', $entry->headerReferer);
+        $this->assertEquals('curl/7.54.1', $entry->headerUseragent);
     }
 }
