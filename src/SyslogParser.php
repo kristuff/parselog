@@ -23,7 +23,7 @@ class SyslogParser extends LogParser
     /** 
      * @var string
      */
-    public $defaultFormat = '%t %h %p %m';
+    public $defaultFormat = '%t %h %s %m';
 
     /** 
      * @var array 
@@ -31,7 +31,7 @@ class SyslogParser extends LogParser
     public $patterns = [
         '%t' => '(?P<time>[\w\d+/ :]+)',
         '%h' => '(?P<hostname>.+)',
-        '%p' => '(?P<service>(\S+|\[\d+\])):',
+        '%s' => '(?P<service>(\S+|\[\d+\])):',
         '%m' => '(?P<message>.+)',
     ];
 }

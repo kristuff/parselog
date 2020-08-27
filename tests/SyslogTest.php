@@ -2,14 +2,11 @@
 
 namespace Kristuff\Parselog\Tests;
 
-use Kristuff\Parselog\ApacheAccessLogParser;
-use Kristuff\Parselog\ApacheAccessLogFormat;
-
 class SyslogTest extends \PHPUnit\Framework\TestCase
 {
     public function testFormat()
     {
-        $parser = new \Kristuff\Parselog\SyslogParser('%t %h %p %m');
+        $parser = new \Kristuff\Parselog\SyslogParser('%t %h %s %m');
         $entry = $parser->parse('Aug 15 10:39:01 domain CRON[25038]: (root) CMD (  [ -x /usr/lib/php/sessionclean ] && if [ ! -d /run/systemd/system ]; then /usr/lib/php/sessionclean; fi)');
 
         $this->assertEquals('Aug 15 10:39:01', $entry->time);
