@@ -21,7 +21,7 @@ namespace Kristuff\Parselog;
 class ApacheErrorLogParser extends LogParser
 {
     /** 
-     * Default format from sofware doc [%t] [%l] [pid %P] %F: %E: [client %a] %M
+     * Default format from software doc [%t] [%l] [pid %P] %F: %E: [client %a] %M
      * 
      * @var string
      */
