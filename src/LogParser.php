@@ -34,7 +34,7 @@ class LogParser
     private $pcreFormat;
 
     /** 
-     * @var LogFormat
+     * @var string
      */
     private $logFormat = '';
 
@@ -54,6 +54,15 @@ class LogParser
     private $factory;
 
 
+    /**
+     * Constructor
+     * 
+     * @access public
+     * @param string                    $format    
+     * @param LogEntryFactoryInterface  $factory        
+     * 
+     * @return void
+     */
     public function __construct(string $format = null, LogEntryFactoryInterface $factory = null)
     {
         $this->logFormat = $format ?? $this->defaultFormat;
@@ -75,6 +84,18 @@ class LogParser
     {
         $this->patterns[$placeholder] = $pattern;
         $this->updateIpPatterns();
+    }
+
+    /**
+     * Gets the current format (defined by user or default)
+     * 
+     * @access public
+     * 
+     * @return string
+     */
+    public function getFormat(): string
+    {
+        return $this->logFormat;
     }
 
     /**
