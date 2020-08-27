@@ -17,6 +17,6 @@ class CombinedTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('200', $entry->status);
         $this->assertEquals('12347', $entry->sentBytes);
         $this->assertEquals('-', $entry->headerReferer);
-        $this->assertEquals('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', $entry->headerUseragent);
+        $this->assertEquals('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', $entry->headerUserAgent);
     }
 }

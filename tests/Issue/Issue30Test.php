@@ -21,6 +21,6 @@ class Issue30Test extends \PHPUnit\Framework\TestCase
         $this->assertEquals('200', $entry->status);
         $this->assertEquals('11576', $entry->sentBytes);
         $this->assertEquals('-', $entry->headerReferer);
-        $this->assertEquals('curl/7.47.0', $entry->headerUseragent);
+        $this->assertEquals('curl/7.47.0', $entry->headerUserAgent);
     }
 }
