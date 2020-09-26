@@ -6,7 +6,7 @@ use Kristuff\Parselog\ApacheAccessLogParser;
 
 class ErrorTest extends \PHPUnit\Framework\TestCase
 {
-    public function testFormat()
+    public function testCommonFormat()
     {
         $parser = new \Kristuff\Parselog\ApacheErrorLogParser('%t %l %P %a %M');
 
@@ -23,5 +23,19 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Fri Aug 14 20:08:22.985375 2020', $entry->time);
         $this->assertEquals('29669', $entry->pid);
         $this->assertEquals('script \'/var/www/domain.com/badfile.php\' not found or unable to stat', $entry->message);
+
+        $entry = $parser->parse("[Mon Dec 23 07:49:01.981912 2013] [:error] [pid 3790] [client 204.232.202.107:46301] script '/var/www/timthumb.php' not found or unable to");
+        $this->assertEquals(':error', $entry->severity);
+
+        $entry = $parser->parse("[Fri Sep 25 20:23:41.378709 2020] [mpm_prefork:notice] [pid 10578] AH00169: caught SIGTERM, shutting down");
+        $this->assertEquals('mpm_prefork:notice', $entry->severity);
+        $this->assertEquals('', $entry->remoteIp);
+        $this->assertEquals('AH00169: caught SIGTERM, shutting down', $entry->message);
+
+        $entry = $parser->parse("[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/home/live/ap/htdocs/test");
+        $this->assertEquals('127.0.0.1', $entry->remoteIp);
+        $this->assertEquals('error', $entry->severity);
+        $this->assertEquals('', $entry->pid);
     }
+
 }
