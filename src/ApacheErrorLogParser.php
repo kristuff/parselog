@@ -32,14 +32,14 @@ class ApacheErrorLogParser extends LogParser
      * 
      * @var string
      */
-    public $defaultFormat = '%t %l %P %a %M';
+    public $defaultFormat = '%t %l %P(| )%a(| )%M';
 
     /** 
      * @var array 
      */
     public $patterns = [
         '%%' => '(?P<percent>\%)',
-        '%a' => '?(\[client (?P<remoteIp>{{PATTERN_IP_ALL}}):[\d]+\] )',
+        '%a' => '?(\[client (?P<remoteIp>{{PATTERN_IP_ALL}}):[\d]+\])',
         '%A' => '(?P<localIp>{{PATTERN_IP_ALL}})',
         '%l' => '\[(?P<severity>[\w:]+)\]',
         '%P' => '?(\[pid (?P<pid>\d+)\])',
