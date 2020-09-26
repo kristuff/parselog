@@ -30,7 +30,8 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $entry = $parser->parse("[Fri Sep 25 20:23:41.378709 2020] [mpm_prefork:notice] [pid 10578] AH00169: caught SIGTERM, shutting down");
         $this->assertEquals('mpm_prefork:notice', $entry->severity);
         $this->assertEquals('', $entry->remoteIp);
-        $this->assertEquals('AH00169: caught SIGTERM, shutting down', $entry->message);
+        $this->assertEquals('AH00169', $entry->errorStatus);
+        $this->assertEquals('caught SIGTERM, shutting down', $entry->message);
 
         $entry = $parser->parse("[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/home/live/ap/htdocs/test");
         $this->assertEquals('127.0.0.1', $entry->remoteIp);
