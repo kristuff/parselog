@@ -32,7 +32,7 @@ class ApacheErrorLogParser extends LogParser
      * 
      * @var string
      */
-    public $defaultFormat = '%t %l %P(| )%a(| )%M';
+    public $defaultFormat = '%t %l ?(%P )?(%a )%M';
 
     /** 
      * @var array 
