@@ -32,7 +32,7 @@ class ApacheErrorLogParser extends LogParser
      * 
      * @var string
      */
-    public $defaultFormat = '%t %l (%P )?(%a )?%M';
+    public $defaultFormat = '%t %l( %P)?( %a)? %M';
 
     /** 
      * @var array 
@@ -42,6 +42,10 @@ class ApacheErrorLogParser extends LogParser
         '%a' => '\[client (?P<remoteIp>{{PATTERN_IP_ALL}}):[\d]+\]',
         '%A' => '(?P<localIp>{{PATTERN_IP_ALL}})',
         '%l' => '\[(?P<severity>[\w:]+)\]',
+        
+        //%E 	APR/OS error status code and string
+        '%E:' => '(?P<errorStatus>[\w\d\s:]+):',
+        
         '%P' => '\[pid (?P<pid>\d+)\]',
         '%t' => '\[(?P<time>(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{2} \d{2}:\d{2}:\d{2}\.\d{6} \d{4})\]',
         '%M' => '(?P<message>.+?)',
