@@ -8,7 +8,7 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
 {
     public function testCommonFormat()
     {
-        $parser = new \Kristuff\Parselog\ApacheErrorLogParser('%t %l %P %a %M');
+        $parser = new \Kristuff\Parselog\ApacheErrorLogParser();
 
         $entry = $parser->parse('[Fri Aug 14 12:13:21.650367 2020] [core:info] [pid 31608] [client 79.142.76.206:59415] AH00128: File does not exist: /var/www/index.php');
         $this->assertEquals('79.142.76.206', $entry->remoteIp);
