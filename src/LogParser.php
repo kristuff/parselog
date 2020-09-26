@@ -18,7 +18,6 @@
 
 namespace Kristuff\Parselog;
 
-use Kristuff\Parselog\Core\LogFormat;
 use Kristuff\Parselog\Core\LogEntryInterface;
 use Kristuff\Parselog\Core\LogEntryFactory;
 use Kristuff\Parselog\Core\LogEntryFactoryInterface;
@@ -52,7 +51,6 @@ class LogParser
      *  @var LogEntryFactoryInterface 
      */
     private $factory;
-
 
     /**
      * Constructor
@@ -133,8 +131,14 @@ class LogParser
         if (!preg_match($this->getPCRE(), $line, $matches)) {
             throw new FormatException($line);
         }
-
         return $this->factory->create($matches);
+//       $parsedLine = [];
+//       foreach (array_filter(array_keys($matches), 'is_string') as $key) {
+//           $parsedLine[$key] = trim($matches[$key]);
+//       }
+//     
+//       return $parsedLine;
+//       return array_filter(array_keys($data), 'is_string') as $key)
     }
 
     /**
