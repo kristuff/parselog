@@ -7,26 +7,22 @@
 [![Latest Stable Version](https://poser.pugx.org/kristuff/parselog/v/stable)](https://packagist.org/packages/kristuff/parselog)
 [![License](https://poser.pugx.org/kristuff/parselog/license)](https://packagist.org/packages/kristuff/parselog)
 
-#Index
------
+# Index
 - [Features](#Features) 
 - [Requirments](#Requirments) 
 - [License](#License) 
 
-#Features
---------
+# Features
 - **✓** Generic customizable log parser
 - **✓** Predefined log parser: ✓ `Apache Access`, ✓ `Apache Error`, ✓ `Fail2ban`, ✓ `Syslog`
 - **✓** IPv4 & IPv6 recognition patterns
 
-#Requirments
---------
+# Requirments
 - PHP >= 7.1
 - Composer (for install)
 
 
-#License
--------
+# License
 
 The MIT License (MIT)
 
