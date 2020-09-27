@@ -1,5 +1,5 @@
 # parselog
-> based on [kassner/log-parser](https://github.com/kassner/log-parser) primarily designed to parse web access logs, **Parselog** extends to other logs like web error, syslog, fail2ban ... *(in progress)*
+> based on [kassner/log-parser](https://github.com/kassner/log-parser) primarily designed to parse web access logs, **Parselog** extends to other logs like web error, syslog, fail2ban, ... *(in progress)*
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kristuff/parselog/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kristuff/parselog/?branch=master)
 [![Build Status](https://travis-ci.org/kristuff/parselog.svg?branch=master)](https://travis-ci.org/kristuff/parselog)
@@ -25,8 +25,6 @@
 # Api Documentation
 
 *draft...*
-
-### Index 
 - [LogParser overview](#LogParser-overview)
 - [LogEntry overview](#LogEntry-overview) 
 - [Software parsers](#Software-parsers) 
@@ -129,7 +127,7 @@ The `\Kristuff\Parselog\Software\SoftwareLogParser` class extends the `\Kristuff
 
 | Method                                    | Parameters        | Description       |
 | ----------                                | ---------------   | -------------     |
-| `SoftwareLogParser::getSotfware()`        |- | Get The sofware name of current parser. Returns `string`  |
+| `SoftwareLogParser::getSoftware()`        |- | Get The sofware name of current parser. Returns `string`  |
 | `SoftwareLogParser::getFiles()`           |- | Get a list of possible files name of current parser Returns `array` |
 | `SoftwareLogParser::getPaths()`           |- | Get a list of possible log paths of current parser. Returns `array` |
 | `SoftwareLogParser::getKnownFormats()`    |- | Get a list of known formats for current parser. Returns an indexed `array` with name as key and format as value |
@@ -191,17 +189,17 @@ The library supports Apache access log format since version 2.2. Here is the ful
 | **Yes**       | %r            | request           | First line of request |
 | No            | %R            | -                 | The handler generating the response (if any). |
 | No            | %s            | -                 | Status. For requests that got internally redirected, this is the status of the *original* request --- %>s for the last. |
-| **Y**         | %>s           | status            | Status |
-| **Y**         | %t            | time              | Time the request was received (standard english format)   |
-| No            | %{format}t    | -                 | The time, in the form given by format.                    |
-| **Y**         | %T            | requestTime       | The time taken to serve the request, in seconds. |
-| **Y**         | %u            | user              | Remote user if the request was authenticated. May be bogus if return status (%s) is 401 (unauthorized). |
-| **Y**         | %U            | URL               | The URL path requested, not including any query string. |
-| **Y**         | %v            | serverName        | The canonical ServerName of the server serving the request. |
-| **Y**         | %V            | canonicalServerName | The server name according to the UseCanonicalName setting. |
+| **Yes** | %>s | status            | Status |
+| **Yes** | %t  | time              | Time the request was received (standard english format)   |
+| No      | %{format}t    | -       | The time, in the form given by format.                    |
+| **Yes** | %T  | requestTime       | The time taken to serve the request, in seconds. |
+| **Yes** | %u  | user | Remote user if the request was authenticated. May be bogus if return status (%s) is 401 (unauthorized). |
+| **Yes** | %U  | URL  | The URL path requested, not including any query string. |
+| **Yes** | %v  | serverName            | The canonical ServerName of the server serving the request. |
+| **Yes** | %V  | canonicalServerName   | The server name according to the UseCanonicalName setting. |
 | No            | %X            | -                 | Connection status when response is completed: X = connection aborted before the response completed. + = connection may be kept alive after the response is sent. - = connection will be closed after the response is sent. |
-| **Y**         | %I            | receivedBytes     | Bytes received, including request and headers, cannot be zero. You need to enable mod_logio to use this. |
-| **Y**         | %O            | sentBytes         | Bytes sent, including headers, cannot be zero. You need to enable mod_logio to use this. |
+| **Yes**       | %I            | receivedBytes     | Bytes received, including request and headers, cannot be zero. You need to enable mod_logio to use this. |
+| **Yes**       | %O            | sentBytes         | Bytes sent, including headers, cannot be zero. You need to enable mod_logio to use this. |
 | No            | %S            | -                 | Bytes transferred (received and sent), including request and headers, cannot be zero. This is the combination of %I and %O. You need to enable mod_logio to use this. |
 </details>
 
