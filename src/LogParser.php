@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.1.1
+ * @version    0.2.0
  * @copyright  2017-2020 Kristuff
  */
 
@@ -28,30 +28,29 @@ use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 class LogParser
 {
     /** 
+     * @access private
      * @var string 
      */
     private $pcreFormat;
 
     /** 
+     * @access private
      * @var string
      */
     private $logFormat = '';
 
-     /** 
-     * @var array 
-     */
-    public $patterns = [];
-
-    /** 
-     * @var string
-     */
-    public $defaultFormat = '';
-
     /**
-     *  @var LogEntryFactoryInterface 
+     * @access private
+     * @var LogEntryFactoryInterface 
      */
     private $factory;
 
+    /** 
+     * @access protected
+     * @var array 
+     */
+    protected $patterns = [];
+   
     /**
      * Constructor
      * 
@@ -63,9 +62,7 @@ class LogParser
      */
     public function __construct(string $format = null, LogEntryFactoryInterface $factory = null)
     {
-        $this->logFormat = $format ?? $this->defaultFormat;
-        $this->updateIpPatterns();
-        $this->setFormat($this->logFormat);
+        $this->setFormat($format ?? '');
         $this->factory = $factory ?: new LogEntryFactory();
     }
 
@@ -81,7 +78,6 @@ class LogParser
     public function addPattern(string $placeholder, string $pattern): void
     {
         $this->patterns[$placeholder] = $pattern;
-        $this->updateIpPatterns();
     }
 
     /**
@@ -106,6 +102,10 @@ class LogParser
      */
     public function setFormat(string $format): void
     {
+        // store log format update IP pattern
+        $this->logFormat = $format ;
+        $this->updateIpPatterns();
+
         // strtr won't work for "complex" header patterns
         // $this->pcreFormat = strtr("#^{$format}$#", $this->patterns);
         $expr = "#^{$format}$#";
@@ -131,14 +131,8 @@ class LogParser
         if (!preg_match($this->getPCRE(), $line, $matches)) {
             throw new FormatException($line);
         }
+        
         return $this->factory->create($matches);
-//       $parsedLine = [];
-//       foreach (array_filter(array_keys($matches), 'is_string') as $key) {
-//           $parsedLine[$key] = trim($matches[$key]);
-//       }
-//     
-//       return $parsedLine;
-//       return array_filter(array_keys($data), 'is_string') as $key)
     }
 
     /**

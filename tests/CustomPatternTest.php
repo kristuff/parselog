@@ -1,8 +1,8 @@
 <?php
 
-namespace Kristuff\Parselog\Tests\Apache\Format;
+namespace Kristuff\Parselog\Tests\Software\Apache\Format;
+use Kristuff\Parselog\Software\ApacheAccessLogParser;
 
-use Kristuff\Parselog\ApacheAccessLogParser;
 use Kristuff\Parselog\Tests\Provider\IpAddress as IpAddressProvider;
 
 class CustomPatternTest extends IpAddressProvider
@@ -11,7 +11,7 @@ class CustomPatternTest extends IpAddressProvider
 
     protected function setUp(): void
     {
-        $this->parser = new ApacheAccessLogParser();
+        $this->parser = new \Kristuff\Parselog\Software\ApacheAccessLogParser();
     }
 
     protected function tearDown(): void
@@ -22,6 +22,8 @@ class CustomPatternTest extends IpAddressProvider
     public function testOriginalIpPattern()
     {
         $this->parser->setFormat('%a "%r"');
+        $this->assertEquals('%a "%r"', $this->parser->getFormat());
+        // DEBUG $this->assertEquals('', $this->parser->getPCRE());
 
         $entry = $this->parser->parse('192.168.1.20 "GET / HTTP/1.1"');
         $this->assertEquals('192.168.1.20', $entry->remoteIp);
