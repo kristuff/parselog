@@ -13,9 +13,9 @@
 - [License](#License) 
 
 # Features
-- **✓** Generic customizable log parser
-- **✓** Predefined log parser: ✓ `Apache Access`, ✓ `Apache Error`, ✓ `Fail2ban`, ✓ `Syslog`
-- **✓** IPv4 & IPv6 recognition patterns
+- Generic customizable log parser
+- Predefined log parser: ✓ `Apache Access`, ✓ `Apache Error`, ✓ `Fail2ban`, ✓ `Syslog`
+- IPv4 & IPv6 recognition patterns
 
 # Requirments
 - PHP >= 7.1
