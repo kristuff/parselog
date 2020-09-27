@@ -26,7 +26,9 @@
 
 *draft...*
 - [LogParser overview](#LogParser-overview)
-- [LogEntry overview](#LogEntry-overview) 
+    - [LogParser class ](#LogParser-class ) 
+    - [Basic usage](#Basic-usage) 
+    - [Use custom LogEntry](#Use-custom-LogEntry) 
 - [Software parsers](#Software-parsers) 
   - [ApacheAccessLogParser](#ApacheAccessLogParser) 
   - [ApacheErrorLogParser](#ApacheErrorLogParser) 
@@ -48,7 +50,7 @@ The library comes with a generic `LogParser` class you can configure from scratc
 
 </details>
 
-#### basic usage 
+#### Basic usage 
 
 ```php
 $parser = new \Kristuff\Parselog\LogParser();
@@ -68,32 +70,34 @@ The `$entry` object will hold all data parsed. If the line does not match the de
 //todo
 ```
 
-### LogEntry overview
-By default, the `LogParser::parse()` method returns a `\Kristuff\Parselog\Core\LogEntry` object. To use your own entry class, you will have to create two new classes, your entry object that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and a factory, that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and that is responsible of creating it: 
+### Use custom LogEntry
+By default, the `LogParser::parse()` method returns a `\Kristuff\Parselog\Core\LogEntry` object. To use your own entry class, you will have to: 
 
-```php
-class MyEntry implements \Kristuff\Parselog\Core\LogEntryInterface
-{
-}
+    - create two new classes, your entry object that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and a factory, that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and that is responsible of creating it: 
 
-class MyEntryFactory implements \Kristuff\Parselog\Core\LogEntryFactoryInterface
-{
-    public function create(array $data): \Kristuff\Parselog\Core\LogEntryInterface
+    ```php
+    class MyEntry implements \Kristuff\Parselog\Core\LogEntryInterface
     {
-        // @TODO implement your code here to return a instance of MyEntry
     }
-}
-```
 
-And then provide the factory as the second argument to the `LogParser` or `SoftwareLogParser` constructor:
+    class MyEntryFactory implements \Kristuff\Parselog\Core\LogEntryFactoryInterface
+    {
+        public function create(array $data): \Kristuff\Parselog\Core\LogEntryInterface
+        {
+            // @TODO implement your code here to return a instance of MyEntry
+        }
+    }
+    ```
 
-```php
-$factory = new MyEntryFactory();
-$parser = new \Kristuff\Parselog\Sofware\ApacheAccessLogParser(null, $factory);
-$entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] "GET /wp-content/uploads/2013/11/whatever.jpg HTTP/1.1" 200 58678');
-```
+    - and then provide the factory as the second argument to the `LogParser` or `SoftwareLogParser` constructor:
 
-`$entry` will be an instance of `MyEntry`.
+    ```php
+    $factory = new MyEntryFactory();
+    $parser = new \Kristuff\Parselog\Sofware\ApacheAccessLogParser(null, $factory);
+    $entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] "GET /wp-content/uploads/2013/11/whatever.jpg HTTP/1.1" 200 58678');
+    ```
+
+    `$entry` will be an instance of `MyEntry`.
 
 ### Software parsers
 
