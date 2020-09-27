@@ -8,7 +8,7 @@ Parselog Api Doc
 The library comes with a generic `LogParser` you can configure from scratch to parse something, and predefined [software parsers](#Software-Parsers) you can use with no or less configuration.
  
 ```php
-$parser = new \Kristuff\Parser\LogParser();
+$parser = new \Kristuff\Parselog\LogParser();
 $parser->addPattern('col1', 'YOUR PATTERN EXPRESSION'); 
 $parser->addPattern('col2', 'YOUR PATTERN EXPRESSION'); 
 $parser->setFormat('col1 col2');
@@ -19,10 +19,41 @@ foreach ($lines as $line) {
     $entry = $parser->parse($line);
 }
 ```
+The `$entry` object will hold all data parsed. If the line does not match the defined format, a `\Kristuff\Parselog\FormatException` will be thrown.
+
+```php
+//todo
+```
 
 ## LogEntry overview
+By default, the `LogParser::parse()` method returns a `\Kristuff\Parselog\Core\LogEntry` object. To use your own entry class, you will have to create two new classes, your entry object that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and a factory, that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and that is responsible of creating it: 
+
+```php
+class MyEntry implements \Kristuff\Parselog\Core\LogEntryInterface
+{
+}
+
+class MyEntryFactory implements \Kristuff\Parselog\Core\LogEntryFactoryInterface
+{
+    public function create(array $data): \Kristuff\Parselog\Core\LogEntryInterface
+    {
+        // @TODO implement your code here to return a instance of MyEntry
+    }
+}
+```
+
+And then provide the factory as the second argument to the `LogParser` or `SoftwareLogParser` constructor:
+
+```php
+$factory = new MyEntryFactory();
+$parser = new \Kristuff\Parselog\Sofware\ApacheAccessLogParser(null, $factory);
+$entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] "GET /wp-content/uploads/2013/11/whatever.jpg HTTP/1.1" 200 58678');
+```
+
+`$entry` will be an instance of `MyEntry`.
 
 ## Software Parsers
+All software parsers extand the `\Kristuff\Parselog\Software\SoftwareLogParser` class, contain software configuration and provide helper functions to get the default log files, to get the defaults formats, ... 
 
 ### ApacheAccess    
 
@@ -42,6 +73,7 @@ use Kristuff\Parser\LogParserFactory;
 
 $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ACCESS);
 ```
+#### Apache access log format
 The default `ApacheAccessLogParser` format is  `"%t %l %P %F: %E: %a %M"`.
 The library supports Apache access log format since version 2.2. Here is the full list of [log format strings](https://httpd.apache.org/docs/2.4/en/mod/mod_log_config.html#formats) supported by Apache 2.4, and whether they are supported by the library:
 
@@ -109,7 +141,7 @@ $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ERROR);
 ```
 
 The library supports Apache error log format version 2.2 and 2.4 with same parser. 
-From software doc, the common format is follwong:
+From software doc, the common format is:
 ```
 ErrorLogFormat "[%t] [%l] [pid %P] %F: %E: [client %a] %M"
 ```
@@ -133,7 +165,7 @@ The default `ApacheErrorLogParser` format is `"'%t %l %P %E: %a %M"` (format mus
 
 ### Fail2ban
 
-Create an `Fail2banLogParser` instance:
+Create an `Fail2BanLogParser` instance:
 
 ```php
 // use default format and entry factory
