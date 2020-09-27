@@ -10,7 +10,7 @@
 # Index
 - [Features](#Features) 
 - [Requirments](#Requirments) 
-- [Api Documentation](#ApiDocumentation) 
+- [Api Documentation](#Api-Documentation) 
 - [License](#License) 
 
 # Features
