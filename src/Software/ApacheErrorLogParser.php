@@ -21,8 +21,8 @@ namespace Kristuff\Parselog\Software;
 use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 
 /**
- * 
  * ApacheErrorLogParser 
+ * 
  * Default format from software doc [%t] [%l] [pid %P] %F: %E: [client %a] %M
  * 
  * Depending on the version and error it could be
@@ -32,12 +32,12 @@ use Kristuff\Parselog\Core\LogEntryFactoryInterface;
  * 2.4 (perfork):   [Mon Dec 23 07:49:01.981912 2013] [:error] [pid 3790] [client 204.232.202.107:46301] script '/var/www/timthumb.php' not found or unable to
  * Reference: https://github.com/fail2ban/fail2ban/issues/268
  * 
- * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+ * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlogformat
  * 
  */
 class ApacheErrorLogParser extends SoftwareLogParser
 {
-      /**
+    /**
      * Constructor
      * 
      * @access public
