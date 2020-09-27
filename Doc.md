@@ -3,6 +3,13 @@ Parselog Api Doc
 
 ***draft***
 
+## Index 
+- [LogParser overview](#LogParser-overview) 
+- [LogEntry overview](#LogEntry-overview) 
+- [Software Parsers](#Software-Parsers) 
+  - [ApacheAccessLogParser](#ApacheAccessLogParser) 
+
+
 ## LogParser overview
 
 The library comes with a generic `LogParser` you can configure from scratch to parse something, and predefined [software parsers](#Software-Parsers) you can use with no or less configuration.
@@ -55,7 +62,7 @@ $entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] 
 ## Software Parsers
 All software parsers extand the `\Kristuff\Parselog\Software\SoftwareLogParser` class, contain software configuration and provide helper functions to get the default log files, to get the defaults formats, ... 
 
-### ApacheAccess    
+### ApacheAccessLogParser    
 
 Create an `ApacheAccessLogParser` instance:
 
