@@ -6,13 +6,16 @@ Parselog Api Doc
 ## Index 
 - [LogParser overview](#LogParser-overview) 
 - [LogEntry overview](#LogEntry-overview) 
-- [Software Parsers](#Software-Parsers) 
+- [Software parsers](#Software-parsers) 
   - [ApacheAccessLogParser](#ApacheAccessLogParser) 
+  - [ApacheErrorLogParser](#ApacheErrorLogParser) 
+  - [SyslogParser](#SyslogParser) 
+  - [Fail2BanLogParser](#Fail2BanLogParser) 
 
 
 ## LogParser overview
 
-The library comes with a generic `LogParser` you can configure from scratch to parse something, and predefined [software parsers](#Software-Parsers) you can use with no or less configuration.
+The library comes with a generic `LogParser` you can configure from scratch to parse something, and predefined [software parsers](#Software-parsers) you can use with no or less configuration.
  
 ```php
 $parser = new \Kristuff\Parselog\LogParser();
@@ -59,8 +62,17 @@ $entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] 
 
 `$entry` will be an instance of `MyEntry`.
 
-## Software Parsers
+## Software parsers
+
 All software parsers extand the `\Kristuff\Parselog\Software\SoftwareLogParser` class, contain software configuration and provide helper functions to get the default log files, to get the defaults formats, ... 
+You can create sotfware parser in two ways: 
+-   use the decicated existing class in `\Kristuff\Parselog\Software` like `ApacheAccessLogParser`;
+-   Or create a `SoftwareLogParser` instance from the `Kristuff\Parser\LogParserFactory::getParser()` method:
+    ```php
+    use Kristuff\Parser\LogParserFactory;
+
+    $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ACCESS);
+    ```
 
 ### ApacheAccessLogParser    
 
@@ -129,7 +141,7 @@ The library supports Apache access log format since version 2.2. Here is the ful
 | No            | %S            | -                 | Bytes transferred (received and sent), including request and headers, cannot be zero. This is the combination of %I and %O. You need to enable mod_logio to use this. |
 </details>
 
-### ApacheError
+### ApacheErrorLogParser
 
 Create an `ApacheErrorLogParser` instance:
 
@@ -170,30 +182,11 @@ The default `ApacheErrorLogParser` format is `"'%t %l %P %E: %a %M"` (format mus
 
 </details>
 
-### Fail2ban
 
-Create an `Fail2BanLogParser` instance:
 
-```php
-// use default format and entry factory
-$parser = new \Kristuff\Parser\Software\Fail2banLogParser(); 
-```
 
-Create an `SoftwareLogParser` instance from factory:
-```php
-use Kristuff\Parser\LogParserFactory;
-$parser = LogParserFactory::getParser(LogParserFactory::TYPE_FAIL2BAN);
-```
 
-<details>
-  <summary>Click to see the list:</summary>
-
-| Supported?    | Placeholder   | Property name     | Description |
-|:----------:   |:-------------:|---------------    | -------------|
-
-</details>
-
-### Syslog
+### SyslogParser
 
 Create an `SyslogParser` instance:
 
@@ -216,3 +209,29 @@ $parser = LogParserFactory::getParser(LogParserFactory::TYPE_SYSLOG);
 
 </details>
 
+
+
+
+
+### Fail2BanLogParser
+
+Create an `Fail2BanLogParser` instance:
+
+```php
+// use default format and entry factory
+$parser = new \Kristuff\Parser\Software\Fail2banLogParser(); 
+```
+
+Create an `SoftwareLogParser` instance from factory:
+```php
+use Kristuff\Parser\LogParserFactory;
+$parser = LogParserFactory::getParser(LogParserFactory::TYPE_FAIL2BAN);
+```
+
+<details>
+  <summary>Click to see the list:</summary>
+
+| Supported?    | Placeholder   | Property name     | Description |
+|:----------:   |:-------------:|---------------    | -------------|
+
+</details>
