@@ -1,8 +1,11 @@
-Doc ***draft***
+Parselog Api Doc 
+-----------------
+
+***draft***
 
 ## LogParser overview
 
-The library comes with a generic `LogParser` you can configure from scratch to parse something, and predefined [software parsers](#Sotware-Parsers) you can use with no or less configuration.
+The library comes with a generic `LogParser` you can configure from scratch to parse something, and predefined [software parsers](#Software-Parsers) you can use with no or less configuration.
  
 ```php
 $parser = new \Kristuff\Parser\LogParser();
@@ -17,10 +20,9 @@ foreach ($lines as $line) {
 }
 ```
 
-
 ## LogEntry overview
 
-## Sotware Parsers
+## Software Parsers
 
 ### ApacheAccess    
 
