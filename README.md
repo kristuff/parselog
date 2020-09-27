@@ -24,10 +24,10 @@
 
 # Api Documentation
 
-***draft***
+*draft...*
 
 ### Index 
-- [LogParser overview](#LogParser-overview) 
+- [LogParser overview](#LogParser-overview)
 - [LogEntry overview](#LogEntry-overview) 
 - [Software parsers](#Software-parsers) 
   - [ApacheAccessLogParser](#ApacheAccessLogParser) 
@@ -38,8 +38,20 @@
 
 ### LogParser overview
 
-The library comes with a generic `LogParser` you can configure from scratch to parse something, and predefined [software parsers](#Software-parsers) you can use with no or less configuration.
- 
+The library comes with a generic `LogParser` class you can configure from scratch to parse something, and predefined [software parsers](#Software-parsers) class you can use with no or less configuration.
+
+#### LogParser class 
+
+<details>
+  <summary>Click to see the class methods:</summary>
+
+| Method                                    | Parameters        | Description       |
+| ----------                                | ---------------   | -------------     |
+
+</details>
+
+#### basic usage 
+
 ```php
 $parser = new \Kristuff\Parselog\LogParser();
 $parser->addPattern('col1', 'YOUR PATTERN EXPRESSION'); 
@@ -89,27 +101,44 @@ $entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] 
 
 All software parsers extand the `\Kristuff\Parselog\Software\SoftwareLogParser` class, contain software configuration and provide helper functions to get the default log files, to get the defaults formats, ... 
 You can create sotfware parser in two ways: 
--   use the dedicated existing class in `\Kristuff\Parselog\Software` like `ApacheAccessLogParser`;
--   Or create a `SoftwareLogParser` instance from the `Kristuff\Parser\LogParserFactory::getParser()` method:
+
+-   use the dedicated existing class in `\Kristuff\Parselog\Software` like `ApacheAccessLogParser`. Current implementation are:
+    -  `\Kristuff\Parselog\Software\ApacheAccessLogParser`
+    -  `\Kristuff\Parselog\Software\ApacheErrorLogParser`
+    -  `\Kristuff\Parselog\Software\Fail2BanLogParser`
+    -  `\Kristuff\Parselog\Software\SyslogParser`
+    
+
+-   Or create a `SoftwareLogParser` instance from the `\Kristuff\Parser\LogParserFactory::getParser()` method:
     ```php
     use Kristuff\Parser\LogParserFactory;
 
     $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ACCESS);
     ```
+    The `\Kristuff\Parser\LogParserFactory::getParser()` method takes the logtype as argument. Valide values (`string`) are:
+    - `LogParserFactory::TYPE_APACHE_ACCESS`      // "apache_access"
+    - `LogParserFactory::TYPE_APACHE_ERROR`       // "apache_error"
+    - `LogParserFactory::TYPE_APACHE_FAIL2BAN`    // "fail2ban"
+    - `LogParserFactory::TYPE_APACHE_SYSLOG`      // "syslog"
 
-#### ApacheAccessLogParser    
+
+The `\Kristuff\Parselog\Software\SoftwareLogParser` class extends the `\Kristuff\Parselog\LogParser` and come with aditionally methods:
 
 <details>
   <summary>Click to see the class methods:</summary>
 
 | Method                                    | Parameters        | Description       |
-|:----------:                               |---------------    | -------------     |
-| `SoftwareLogParser::getSotfware()`        |-                  | Get The sofware name of current parser. Returns `string`  |
-| `SoftwareLogParser::getFiles()`           |-                  | Get The sofware name of current parser Returns `array` |
-| `SoftwareLogParser::getPaths()`           |-                  | Get The sofware name of current parser. Returns `array` |
-| `SoftwareLogParser::getKnownFormats()`    |-                  | Get a list of known formats for current parser. Returns an indexed `array` with name as key and format as value |
+| ----------                                | ---------------   | -------------     |
+| `SoftwareLogParser::getSotfware()`        |- | Get The sofware name of current parser. Returns `string`  |
+| `SoftwareLogParser::getFiles()`           |- | Get a list of possible files name of current parser Returns `array` |
+| `SoftwareLogParser::getPaths()`           |- | Get a list of possible log paths of current parser. Returns `array` |
+| `SoftwareLogParser::getKnownFormats()`    |- | Get a list of known formats for current parser. Returns an indexed `array` with name as key and format as value |
 
 </details>
+
+
+
+#### ApacheAccessLogParser    
 
 Create an `ApacheAccessLogParser` instance:
 
