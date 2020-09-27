@@ -70,7 +70,7 @@ The `$entry` object will hold all data parsed. If the line does not match the de
 //todo
 ```
 
-### Use custom LogEntry
+#### Use custom LogEntry
 By default, the `LogParser::parse()` method returns a `\Kristuff\Parselog\Core\LogEntry` object. To use your own entry class, you will have to: 
 
     - create two new classes, your entry object that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and a factory, that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and that is responsible of creating it: 
