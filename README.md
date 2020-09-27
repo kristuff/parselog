@@ -75,29 +75,29 @@ By default, the `LogParser::parse()` method returns a `\Kristuff\Parselog\Core\L
 
 -   create two new classes, your entry object that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and a factory, that implements `\Kristuff\Parselog\Core\LogEntryInterface` interface and that is responsible of creating it: 
 
-        ```php
-        class MyEntry implements \Kristuff\Parselog\Core\LogEntryInterface
-        {
-        }
+```php
+class MyEntry implements \Kristuff\Parselog\Core\LogEntryInterface
+{
+}
 
-        class MyEntryFactory implements \Kristuff\Parselog\Core\LogEntryFactoryInterface
-        {
-            public function create(array $data): \Kristuff\Parselog\Core\LogEntryInterface
-            {
-                // @TODO implement your code here to return a instance of MyEntry
-            }
-        }
-        ```
+class MyEntryFactory implements \Kristuff\Parselog\Core\LogEntryFactoryInterface
+{
+    public function create(array $data): \Kristuff\Parselog\Core\LogEntryInterface
+    {
+        // @TODO implement your code here to return a instance of MyEntry
+    }
+}
+```
 
 -   and then provide the factory as the second argument to the `LogParser` or `SoftwareLogParser` constructor:
 
-        ```php
-        $factory = new MyEntryFactory();
-        $parser = new \Kristuff\Parselog\Sofware\ApacheAccessLogParser(null, $factory);
-        $entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] "GET /wp-content/uploads/2013/11/whatever.jpg HTTP/1.1" 200 58678');
-        ```
+```php
+$factory = new MyEntryFactory();
+$parser = new \Kristuff\Parselog\Sofware\ApacheAccessLogParser(null, $factory);
+$entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] "GET /wp-content/uploads/2013/11/whatever.jpg HTTP/1.1" 200 58678');
+    ```
 
-        `$entry` will be an instance of `MyEntry`.
+    `$entry` will be an instance of `MyEntry`.
 
 ### Software parsers
 
