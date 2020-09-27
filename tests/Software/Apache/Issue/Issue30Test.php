@@ -2,8 +2,6 @@
 
 namespace Kristuff\Parselog\Tests\Issue;
 
-use Kristuff\Parselog\Software\ApacheAccessLogParser;
-
 class Issue30Test extends \PHPUnit\Framework\TestCase
 {
     public function testCustomFormat()

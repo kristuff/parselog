@@ -99,6 +99,18 @@ You can create sotfware parser in two ways:
 
 #### ApacheAccessLogParser    
 
+<details>
+  <summary>Click to see the class methods:</summary>
+
+| Method                                    | Parameters        | Description       |
+|:----------:                               |---------------    | -------------     |
+| `SoftwareLogParser::getSotfware()`        |-                  | Get The sofware name of current parser. Returns `string`  |
+| `SoftwareLogParser::getFiles()`           |-                  | Get The sofware name of current parser Returns `array` |
+| `SoftwareLogParser::getPaths()`           |-                  | Get The sofware name of current parser. Returns `array` |
+| `SoftwareLogParser::getKnownFormats()`    |-                  | Get a list of known formats for current parser. Returns an indexed `array` with name as key and format as value |
+
+</details>
+
 Create an `ApacheAccessLogParser` instance:
 
 ```php

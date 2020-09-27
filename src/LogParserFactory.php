@@ -18,7 +18,7 @@
 
 namespace Kristuff\Parselog;
 
-use \Kristuff\Parselog\Core\LogEntryFactoryInterface;
+use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 use Kristuff\Parselog\Software\SoftwareLogParser;
 
 /**

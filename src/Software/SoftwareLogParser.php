@@ -109,7 +109,7 @@ abstract class SoftwareLogParser extends LogParser
      * 
      * @return string
      */
-    public function getSotware(): string
+    public function getSoftware(): string
     {
         return $this->software;
     }

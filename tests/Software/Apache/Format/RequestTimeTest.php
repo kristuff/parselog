@@ -2,8 +2,6 @@
 
 namespace Kristuff\Parselog\Tests\Software\Apache\Format;
 
-use Kristuff\Parselog\Software\ApacheAccessLogParser;
-
 /**
  * @format %T
  * @description The request time
