@@ -95,7 +95,7 @@ class MyEntryFactory implements \Kristuff\Parselog\Core\LogEntryFactoryInterface
 $factory = new MyEntryFactory();
 $parser = new \Kristuff\Parselog\Sofware\ApacheAccessLogParser(null, $factory);
 $entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] "GET /wp-content/uploads/2013/11/whatever.jpg HTTP/1.1" 200 58678');
-    ```
+```
 
     `$entry` will be an instance of `MyEntry`.
 
