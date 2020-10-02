@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.2.0
+ * @version    0.3.0
  * @copyright  2017-2020 Kristuff
  */
 
@@ -42,7 +42,7 @@ class LogParserFactory
      * 
      * @return \Kristuff\Parselog\LogParser|null        
      */
-    public static function getParser(string $logType, string $format = null, LogEntryFactoryInterface $factory = null): ?SoftwareLogParser 
+    public static function getParser(string $logType, string $format = null, LogEntryFactoryInterface $factory = null): ?SoftwareLogParser
     {
         switch ($logType){
 

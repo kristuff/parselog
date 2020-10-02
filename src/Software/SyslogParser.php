@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.2.0
+ * @version    0.3.0
  * @copyright  2017-2020 Kristuff
  */
 
@@ -22,6 +22,7 @@ use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 
 /**
  *  Aug 15 10:39:01 domain CRON[25038]: (root) CMD (  [ -x /usr/lib/php/sessionclean ] && if [ ! -d /run/systemd/system ]; then /usr/lib/php/sessionclean; fi)
+ *  Oct  2 14:51:43 kristuff systemd-logind[342]: New session 827 of user XXX
  */
 class SyslogParser extends SoftwareLogParser
 {
@@ -38,7 +39,8 @@ class SyslogParser extends SoftwareLogParser
     {
         $this->software       = 'Syslog';
         $this->prettyName     = 'Syslog';
-        
+      //  $this->timeFormat     = 'M j h:i:s';
+
         $this->addFormat('default', '%t %h %s %m');
         $this->defaultFormat      = '%t %h %s %m';
         
@@ -46,10 +48,10 @@ class SyslogParser extends SoftwareLogParser
         $this->addFile("syslog");
         //todo
 
-        $this->addColumn('%t',  'time',         'Date',     '(?P<time>(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{2} \d{2}:\d{2}:\d{2})');
-        $this->addColumn('%h',  'hostaname',    'Hostname', '(?P<hostname>.+?)');
-        $this->addColumn('%s',  'service',      'Service',  '(?P<service>(\S+|\[\d+\])):');
-        $this->addColumn('%m',  'message',      'Message',  '(?P<message>.+)');
+        $this->addPattern('%t',  '(?P<time>(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\s\d|\d{2}) \d{2}:\d{2}:\d{2})');
+        $this->addPattern('%h',  '(?P<hostname>.+?)');
+        $this->addPattern('%s',  '(?P<service>(\S+|\[\d+\])):');
+        $this->addPattern('%m',  '(?P<message>.+)');
 
         parent::__construct($format, $factory);
     }

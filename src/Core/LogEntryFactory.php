@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.2.0
+ * @version    0.3.0
  * @copyright  2017-2020 Kristuff
  */
 
@@ -36,13 +36,13 @@ class LogEntryFactory implements LogEntryFactoryInterface
             $entry->{$key} = trim($data[$key]);
         }
 
-        if (isset($entry->time)) {
-            $stamp = strtotime($entry->time);
-            
-            if (false !== $stamp) {
-                $entry->stamp = $stamp;
-            }
-        }
+        //if (isset($entry->time)) {
+        //    $stamp = strtotime($entry->time);
+        //    
+        //    if (false !== $stamp) {
+        //        $entry->stamp = $stamp;
+        //    }
+        //}
 
         return $entry;
     }

@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.2.0
+ * @version    0.3.0
  * @copyright  2017-2020 Kristuff
  */
 
@@ -42,14 +42,19 @@ class Fail2BanLogParser extends SoftwareLogParser
         $this->prettyName     = 'Fail2ban';
         $this->addFormat('default', '%t %s %p %l %m');
         $this->defaultFormat      = '%t %s %p %l %m';
+        $this->timeFormat   = 'Y-m-d';
+
         $this->addPath("/var/log/");
         $this->addFile("fail2ban.log");
+
      // '%d' => '(?P<date>[\d \-,:]+)',
-        $this->addColumn('%t',  'time',         'Date',     '(?P<time>[\d \-:]+)(,\d+)');
-        $this->addColumn('%s',  'service',      'Service',  '(?P<service>[\w\d\. :]+(|\s+))');
-        $this->addColumn('%p',  'pid',          'PID',      '\[(?P<pid>\d+)\]:');
-        $this->addColumn('%l',  'level',        'Level',    '(?P<level>(Level \d+|DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL)(|\s+))');
-        $this->addColumn('%m',  'message',      'Message',  '(?P<message>.+)');
+        $this->addPattern('%t', '(?P<time>[\d \-:]+)(,\d+)');
+        $this->addPattern('%s', '(?P<service>[\w\d\. :]+(|\s+))');
+
+        $this->addPattern('[%p]:', '%p'); 
+        $this->addPattern('%p', '\[(?P<pid>\d+)\]:');
+        $this->addPattern('%l', '(?P<level>(Level \d+|DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL)(|\s+))');
+        $this->addPattern('%m', '(?P<message>.+)');
 
         parent::__construct($format, $factory);
     }

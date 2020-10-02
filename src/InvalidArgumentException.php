@@ -18,6 +18,6 @@
 
 namespace Kristuff\Parselog;
 
-class FormatException extends \Exception
+class InvalidArgumentException extends \Exception
 {
 }

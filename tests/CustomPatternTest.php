@@ -1,6 +1,6 @@
 <?php
 
-namespace Kristuff\Parselog\Tests\Software\Apache\Format;
+namespace Kristuff\Parselog\Tests;
 use Kristuff\Parselog\Software\ApacheAccessLogParser;
 
 use Kristuff\Parselog\Tests\Provider\IpAddress as IpAddressProvider;

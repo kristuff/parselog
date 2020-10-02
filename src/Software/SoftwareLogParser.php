@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.2.0
+ * @version    0.3.0
  * @copyright  2017-2020 Kristuff
  */
 
@@ -22,7 +22,7 @@ use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 use Kristuff\Parselog\LogParser;
 
 /**
- * Abstrat base class for software parser
+ * Abstract base class for software parser
  */
 abstract class SoftwareLogParser extends LogParser
 {
@@ -51,17 +51,13 @@ abstract class SoftwareLogParser extends LogParser
     protected $prettyName = '';
 
     /** 
+     * @access protected
      * @var array 
      */
     protected $knownFormats = [];
 
     /** 
-     * @var array 
-     */
-    protected $columns = [];
-
-    /** 
-     * The log file names
+     * The log files names
      * 
      * @access protected
      * @var array 
@@ -69,7 +65,7 @@ abstract class SoftwareLogParser extends LogParser
     protected $files = [];
 
     /** 
-     * The log file paths
+     * The log files paths
      * 
      * @access protected
      * @var array 
@@ -189,58 +185,5 @@ abstract class SoftwareLogParser extends LogParser
     public function getPaths(): array
     {
         return $this->paths;
-    }
-
-    /**
-     * Add a column definition to the list
-     * 
-     * @access protected
-     * @param string    $placeholder        The column placeholder
-     * @param string    $propertyName       The column name
-     * @param string    $prettyName         The column pretty name
-     * @param string    $pattern            The column regex expression
-     * @param bool      $required           False if the entire column can be missing in output (default is true)
-     * 
-     * @return void
-     */
-    protected function addColumn(string $placeholder, string $propertyName, string $prettyName, string $pattern, bool $required = true): void
-    {
-        $this->columns[] = [
-            'placeholder'   => $placeholder,
-            'propertyName'  => $propertyName,
-            'prettyName'    => $prettyName,
-            'pattern'       => $pattern,
-            'required'      => $required,
-        ];
-
-        if (!empty($pattern)){
-
-            // optional columns ?
-            // adjust pattern for nullable columns and add space after placeholder
-            // - $format = '%t %l %P %E: %a %M';
-            // + $format = '%t %l (%P )?(%E: )?(%a )?%M';
-            $this->addPattern( 
-                $required ? $placeholder : $placeholder . ' ' , 
-                $required ? $pattern     : '(' . $pattern . ' )?' 
-            );
-        }
-    }
-
-    /**
-     * Gets the list of columns according to current log format
-     * 
-     * @access public
-     * 
-     * @return array
-     */
-    public function getColumns()
-    {
-        $cols = [];
-        foreach ($this->columns as $column){
-            if (strpos($this->getFormat(), $column['placeholder']) !== false){
-                $cols[] = $column;
-            }
-        }
-        return $cols;
     }
 }
