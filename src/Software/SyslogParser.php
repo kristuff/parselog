@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.3.0
+ * @version    0.4.0
  * @copyright  2017-2020 Kristuff
  */
 
@@ -21,8 +21,10 @@ namespace Kristuff\Parselog\Software;
 use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 
 /**
+ * 
  *  Aug 15 10:39:01 domain CRON[25038]: (root) CMD (  [ -x /usr/lib/php/sessionclean ] && if [ ! -d /run/systemd/system ]; then /usr/lib/php/sessionclean; fi)
- *  Oct  2 14:51:43 kristuff systemd-logind[342]: New session 827 of user XXX
+ *  Oct  2 14:51:43 domain systemd-logind[342]: New session 827 of user XXX
+ *  Oct  2 14:51:49 domain su: (to root) xxx on pts/1
  */
 class SyslogParser extends SoftwareLogParser
 {
@@ -39,18 +41,25 @@ class SyslogParser extends SoftwareLogParser
     {
         $this->software       = 'Syslog';
         $this->prettyName     = 'Syslog';
-      //  $this->timeFormat     = 'M j h:i:s';
 
-        $this->addFormat('default', '%t %h %s %m');
-        $this->defaultFormat      = '%t %h %s %m';
+        $this->addFormat('default', '%t %h %s%p: %m');
+        $this->defaultFormat      = '%t %h %s%p: %m';
         
         $this->addPath("/var/log/");
         $this->addFile("syslog");
-        //todo
+        $this->addFile("kern.log");
+        $this->addFile("auth.log");
+        $this->addFile("daemon.log");
+        $this->addFile("mail.err");
+        $this->addFile("mail.warn");
+        $this->addFile("mail.info");
+        $this->addFile("user");
+        $this->addFile("messages");
 
         $this->addPattern('%t',  '(?P<time>(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\s\d|\d{2}) \d{2}:\d{2}:\d{2})');
         $this->addPattern('%h',  '(?P<hostname>.+?)');
-        $this->addPattern('%s',  '(?P<service>(\S+|\[\d+\])):');
+        $this->addPattern('%s',  '(?P<service>[^\[:]+)');
+        $this->addPattern('%p',  '(\[(?P<pid>\d+)\])?');
         $this->addPattern('%m',  '(?P<message>.+)');
 
         parent::__construct($format, $factory);
