@@ -1,4 +1,4 @@
-# parselog
+# Parselog
 > based on [kassner/log-parser](https://github.com/kassner/log-parser) primarily designed to parse web access logs, **Parselog** extends to other logs like web error, syslog, fail2ban, ... *(in progress)*
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kristuff/parselog/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kristuff/parselog/?branch=master)
@@ -7,7 +7,6 @@
 [![Latest Stable Version](https://poser.pugx.org/kristuff/parselog/v/stable)](https://packagist.org/packages/kristuff/parselog)
 [![License](https://poser.pugx.org/kristuff/parselog/license)](https://packagist.org/packages/kristuff/parselog)
 
-# Index
 - [Features](#Features) 
 - [Requirments](#Requirments) 
 - [Api Documentation](#Api-Documentation) 
@@ -15,7 +14,7 @@
 
 # Features
 - Generic customizable log parser
-- Predefined log parser: ✓ `Apache Access`, ✓ `Apache Error`, ✓ `Fail2ban`, ✓ `Syslog`
+- Predefined software log parsers: ✓ `Apache Access`, ✓ `Apache Error`, ✓ `Fail2ban`, ✓ `Syslog`
 - IPv4 & IPv6 recognition patterns
 
 # Requirments
@@ -48,27 +47,54 @@ The library comes with a generic `LogParser` class you can configure from scratc
 | Method                                    | Parameters        | Description       |
 | ----------                                | ---------------   | -------------     |
 
+
+TODO
+
 </details>
 
 #### Basic usage 
 
-```php
-$parser = new \Kristuff\Parselog\LogParser();
-$parser->addPattern('col1', 'YOUR PATTERN EXPRESSION'); 
-$parser->addPattern('col2', 'YOUR PATTERN EXPRESSION'); 
-$parser->setFormat('col1 col2');
-
-$lines = file('/path/to/log/file', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-foreach ($lines as $line) {
-    $entry = $parser->parse($line);
-}
-```
-The `$entry` object will hold all data parsed. If the line does not match the defined format, a `\Kristuff\Parselog\FormatException` will be thrown.
+To use the `\Kristuff\Parselog\LogParser` class, you need to define the log format, then parse data using `LogParser::parse()` method. 
 
 ```php
-//todo
+$data = 'fooValue2 123456'; // the data to parse
+$parser = new \Kristuff\Parselog\LogParser(); // create a LogParser instance
+$parser->setFormat('(?P<foo>(fooValue1|fooValue2)) (?P<bar>[0-9]+)'); // set format including pattern
+$entry = $parser->parse($data);// parse data
+
 ```
+
+The `LogParser::parse()` method returns a `\Kristuff\Parselog\Core\LogEntry` object. That `$entry` object will hold all data parsed. 
+```php
+echo $entry->foo; // fooValue1
+echo $entry->bar; // 123456
+
+```
+If the line does not match the defined format, a `\Kristuff\Parselog\FormatException` will be thrown.
+
+#### Define log format
+Defining the log format can be done in different ways. In section above, we defined the full pattern using the `LogParser::setFormat()` method. To define the log format more easily, you can use the `LogParser::addPattern()` or `LogParser::addNamedpattern()` methods.  
+
+This 3 blocks of code produce the same result:
+
+```php
+// set format including pattern
+$parser->setFormat('(?P<foo>(fooValue1|fooValue2)) (?P<bar>[0-9]+)');
+
+// OR add patterns, then define format
+$parser->addPattern('%1', '(?P<foo>(fooValue1|fooValue2))'); 
+$parser->addPattern('%2', '(?P<bar>[0-9]+)'); 
+$parser->setFormat('%1 %2');
+
+// OR add named patterns, then define format
+$parser->addNamedPattern('%1', 'foo', '(fooValue1|fooValue2)'); 
+$parser->addNamedPattern('%2', 'bar', '[0-9]+'); 
+$parser->setFormat('%1 %2');
+
+```
+
+*TODO $parser->addNamedPattern with optional column*
+
 
 #### Use custom LogEntry
 By default, the `LogParser::parse()` method returns a `\Kristuff\Parselog\Core\LogEntry` object. To use your own entry class, you will have to: 
@@ -104,11 +130,11 @@ $entry = $parser->parse('193.191.216.76 - www-data [27/Jan/2014:04:51:16 +0100] 
 All software parsers extand the `\Kristuff\Parselog\Software\SoftwareLogParser` class, contain software configuration and provide helper functions to get the default log files, to get the defaults formats, ... 
 You can create sotfware parser in two ways: 
 
--   use the dedicated existing class in `\Kristuff\Parselog\Software` like `ApacheAccessLogParser`. Current implementation are:
-    -  `\Kristuff\Parselog\Software\ApacheAccessLogParser`
-    -  `\Kristuff\Parselog\Software\ApacheErrorLogParser`
-    -  `\Kristuff\Parselog\Software\Fail2BanLogParser`
-    -  `\Kristuff\Parselog\Software\SyslogParser`
+-   Use the dedicated existing class in `\Kristuff\Parselog\Software` like `ApacheAccessLogParser`. Current implementation are:
+    -  `ApacheAccessLogParser`
+    -  `ApacheErrorLogParser`
+    -  `Fail2BanLogParser`
+    -  `SyslogParser`
     
 
 -   Or create a `SoftwareLogParser` instance from the `\Kristuff\Parser\LogParserFactory::getParser()` method:
@@ -131,7 +157,7 @@ The `\Kristuff\Parselog\Software\SoftwareLogParser` class extends the `\Kristuff
 
 | Method                                    | Parameters        | Description       |
 | ----------                                | ---------------   | -------------     |
-| `SoftwareLogParser::getSoftware()`        |- | Get The sofware name of current parser. Returns `string`  |
+| `SoftwareLogParser::getSoftware()`        |- | Get the sofware name of current parser. Returns `string`  |
 | `SoftwareLogParser::getFiles()`           |- | Get a list of possible files name of current parser Returns `array` |
 | `SoftwareLogParser::getPaths()`           |- | Get a list of possible log paths of current parser. Returns `array` |
 | `SoftwareLogParser::getKnownFormats()`    |- | Get a list of known formats for current parser. Returns an indexed `array` with name as key and format as value |
@@ -159,8 +185,17 @@ use Kristuff\Parser\LogParserFactory;
 $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ACCESS);
 ```
 ##### Apache access log format
-The default `ApacheAccessLogParser` format is  `"%t %l %P %F: %E: %a %M"`.
-The library supports Apache access log format since version 2.2. Here is the full list of [log format strings](https://httpd.apache.org/docs/2.4/en/mod/mod_log_config.html#formats) supported by Apache 2.4, and whether they are supported by the library:
+The default `ApacheAccessLogParser` format is  `%h %l %u %t "%r" %>s %O`. You can retreive this format using the constant `ApacheAccessLogParser::FORMAT_COMMON`. Other registered formats are following:
+
+```php
+ApacheAccessLogParser::FORMAT_COMBINED       // %h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"
+ApacheAccessLogParser::FORMAT_COMBINED_VHOST // %v:%p %h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"
+ApacheAccessLogParser::FORMAT_COMMON_VHOST   // %v:%p %h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"
+ApacheAccessLogParser::FORMAT_REFERER        // %{Referer}i 
+ApacheAccessLogParser::FORMAT_AGENT          // %{User-Agent}i 
+```
+
+The library works with Apache access log format since version 2.2. Here is the full list of [log format strings](https://httpd.apache.org/docs/2.4/en/mod/mod_log_config.html#formats) supported by Apache 2.4, and whether they are supported by the library:
 
 <details>
   <summary>Click to see the list:</summary>
@@ -189,7 +224,7 @@ The library supports Apache access log format since version 2.2. Here is the ful
 | No            | %{format}p    | -                 | The canonical port of the server serving the request or the server's actual port or the client's actual port. Valid formats are canonical, local, or remote. |
 | No            | %P            | -                 | The process ID of the child that serviced the request. |
 | No            | %{format}P    | -                 | The process ID or thread id of the child that serviced the request. Valid formats are pid, tid, and hextid. hextid requires APR 1.2.0 or higher. |
-| No??????????  | %q  | - | The query string (prepended with a ? if a query string exists, otherwise an empty string)|
+| TODO!  | %q  | - | The query string (prepended with a ? if a query string exists, otherwise an empty string)|
 | **Yes**       | %r            | request           | First line of request |
 | No            | %R            | -                 | The handler generating the response (if any). |
 | No            | %s            | -                 | Status. For requests that got internally redirected, this is the status of the *original* request --- %>s for the last. |
@@ -225,12 +260,17 @@ use Kristuff\Parser\LogParserFactory;
 $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ERROR);
 ```
 
-The library supports Apache error log format version 2.2 and 2.4 with same parser. 
-From software doc, the common format is:
+##### Apache error log format
+The default `ApacheErrorLogParser` format is  `[%{u}t] [%l] [pid %P] [client %a] %F: %E: %M` (format can include brackets). You can retreive this format using the constant `ApacheErrorLogParser::FORMAT_DEFAULT_APACHE_2_4`. Other registered formats are following:
+
+```php
+ApacheErrorLogParser::FORMAT_DEFAULT_APACHE_2_2   //[%t] [%l] [client %a] %F: %E: %M    
+ApacheErrorLogParser::FORMAT_DEFAULT_APACHE_2_4   //[%{u}t] [%l] [pid %P] [client %a] %F: %E: %M    
+ApacheErrorLogParser::FORMAT_MPM_APACHE_2_4       //[%{u}t] [%-m:%l] [pid %P] [client %a] %F: %E: %M    
+ApacheErrorLogParser::FORMAT_MPM_TID_APACHE_2_4   //[%{u}t] [%-m:%l] [pid %P:tid %T] [client %a] %F: %E: %M    
 ```
-ErrorLogFormat "[%t] [%l] [pid %P] %F: %E: [client %a] %M"
-```
-The default `ApacheErrorLogParser` format is `"'%t %l %P %E: %a %M"` (format must excludes brackets). Here is a partial list of [log format strings](https://httpd.apache.org/docs/2.4/en/mod/core.html#errorlogformat) supported by Apache 2.4, and whether they are supported by the library:
+
+The library supports Apache error log format version 2.2 and 2.4 with same parser. Here is a partial list of [log format strings](https://httpd.apache.org/docs/2.4/en/mod/core.html#errorlogformat) supported by Apache 2.4, and whether they are supported by the library:
 
 <details>
   <summary>Click to see the list:</summary>
@@ -241,10 +281,13 @@ The default `ApacheErrorLogParser` format is `"'%t %l %P %E: %a %M"` (format mus
 | **Yes**       | %a            | remoteIp          | Client IP address of the request (remoteIp).|
 | **Yes**       | %A            | localIp           | Local IP-address. |
 | **Yes**       | %E:           | errorCode         | APR/OS error status code and string. |
-| No            | %F:           | -                 | Source file name and line number of the log call. |
+| **Yes**       | %F:           | -                 | Source file name and line number of the log call. |
 | **Yes**       | %l            | level             | Loglevel of the message. |
 | **Yes**       | %M            | message           | The actual log message. |
 | **Yes**       | %P            | pid               | Process ID of current process. |
+| **Yes**       | %T            | tid               | Thread ID of current thread. |
+| **Yes**       | %t 	          | time              | The current time
+| **Yes**       | %{u}t         | time              | The current time including micro-seconds
 
 </details>
 

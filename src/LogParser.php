@@ -12,20 +12,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.2.0
+ * @version    0.3.0
  * @copyright  2017-2020 Kristuff
  */
 
 namespace Kristuff\Parselog;
 
+use DateTime;
 use Kristuff\Parselog\Core\LogEntryInterface;
 use Kristuff\Parselog\Core\LogEntryFactory;
 use Kristuff\Parselog\Core\LogEntryFactoryInterface;
+use Kristuff\Parselog\Core\RegexFactory;
 
 /** 
  * LogParser
  */
-class LogParser
+class LogParser extends RegexFactory
 {
     /** 
      * @access private
@@ -37,7 +39,7 @@ class LogParser
      * @access private
      * @var string
      */
-    private $logFormat = '';
+    protected $logFormat = '';
 
     /**
      * @access private
@@ -51,6 +53,14 @@ class LogParser
      */
     protected $patterns = [];
    
+    /** 
+     * The time format 
+     * 
+     * @access protected
+     * @var string
+     */
+    protected $timeFormat = null;
+
     /**
      * Constructor
      * 
@@ -67,10 +77,41 @@ class LogParser
     }
 
     /**
+     * Sets/Adds named pattern 
+     * 
+     * @access public
+     * @param string    $placeholder
+     * @param string    $propertyName
+     * @param string    $pattern            The pattern expression
+     * @param bool      $required           False if the column way be missing from output. Default is true.
+     *                                      Note this feature won't work with the first column. 
+     * 
+     * @return void
+     */
+    public function addNamedPattern(string $placeholder, string $propertyName, string $pattern, bool $required = true): void
+    {
+        // First field must be a required field
+        if ($required === false && count($this->patterns) === 0){
+            throw new \Kristuff\Parselog\InvalidArgumentException(
+                "Invalid value 'false' for argument 'required' given: First pattern must be a required pattern.");
+        }
+
+        // required or optional column ?
+        // Adjust pattern for nullable columns and add space before placeholder
+        // - $format = '%t %l %P %E: %a %M';
+        // + $format = '%t %l( %P)?( %E:)?(%a)? %M';
+        $key = $required ? $placeholder :  ' ' . $placeholder ; 
+        $val = '(?P<'. $propertyName . '>' . ($required ? $pattern : '( ' . $pattern . ')?') . ')'; 
+
+        $this->addPattern($key, $val);
+    }
+
+    /**
      * Sets/Adds pattern 
      * 
      * @access public
-     * @param string    $placeholder    
+     * @param string    $placeholder
+     * @param string    $propertyName
      * @param string    $pattern        
      * 
      * @return void
@@ -132,7 +173,13 @@ class LogParser
             throw new FormatException($line);
         }
         
-        return $this->factory->create($matches);
+        $entry = $this->factory->create($matches);
+
+        if (isset($entry->time)) {
+            $entry->stamp = $this->getTimestamp($entry->time);
+        }
+      
+        return $entry;
     }
 
     /**
@@ -147,6 +194,34 @@ class LogParser
     }
 
     /**
+     * Converts time to previously set format.
+     *
+     * @access protected
+     * @param string        $time
+     *
+     * @return int|null
+     */
+    protected function getTimestamp($time): ?int
+    {
+        // try to get stamp from string
+        if (isset($this->timeFormat)){
+            $dateTime = DateTime::createFromFormat($this->timeFormat, $time);
+
+            if (false !== $dateTime) {
+                return $dateTime->getTimestamp();
+            }
+        }
+
+        // try to get stamp from string
+        $stamp = strtotime($time);
+        if (false !== $stamp) {
+            return $stamp;
+        }
+
+        return null;
+    }
+
+    /**
      * Replaces {{PATTERN_IP_ALL}} with the IPV4/6 patterns.
      * 
      * @access public
@@ -154,14 +229,14 @@ class LogParser
      */
     private function updateIpPatterns(): void
     {
-        // Set IPv4 & IPv6 recognition patterns
+        // Set IPv4 & IPv6 recognition patterns 
         $ipPatterns = implode('|', [
-            'ipv4' => '(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9]))',
-            'ipv6full' => '([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){7})', // 1:1:1:1:1:1:1:1
-            'ipv6null' => '(::)',
-            'ipv6leading' => '(:(:[0-9A-Fa-f]{1,4}){1,7})', // ::1:1:1:1:1:1:1
-            'ipv6mid' => '(([0-9A-Fa-f]{1,4}:){1,6}(:[0-9A-Fa-f]{1,4}){1,6})', // 1:1:1::1:1:1
-            'ipv6trailing' => '(([0-9A-Fa-f]{1,4}:){1,7}:)', // 1:1:1:1:1:1:1::
+            'ipv4'          => self::PATTERN_IP_V4,
+            'ipv6full'      => self::PATTERN_IP_V6_FULL,        // 1:1:1:1:1:1:1:1
+            'ipv6null'      => self::PATTERN_IP_V6_NULL,        // ::
+            'ipv6leading'   => self::PATTERN_IP_V6_LEADING,     // ::1:1:1:1:1:1:1
+            'ipv6mid'       => self::PATTERN_IP_V6_MID,         // 1:1:1::1:1:1
+            'ipv6trailing'  => self::PATTERN_IP_V6_TRAILING,    // 1:1:1:1:1:1:1::
         ]);
 
         foreach ($this->patterns as &$value) {

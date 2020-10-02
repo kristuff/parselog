@@ -1,10 +1,10 @@
 <?php
 
-namespace Kristuff\Parselog\Tests\Software\Apache\Format;
+namespace Kristuff\Parselog\Tests;
 
 use Kristuff\Parselog\LogParserFactory;
 
-class BaseTest extends \PHPUnit\Framework\TestCase
+class SoftwareTest extends \PHPUnit\Framework\TestCase
 {
     public function testApacheFactory()
     {
