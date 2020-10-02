@@ -137,13 +137,13 @@ You can create sotfware parser in two ways:
     -  `SyslogParser`
     
 
--   Or create a `SoftwareLogParser` instance from the `\Kristuff\Parser\LogParserFactory::getParser()` method:
+-   Or create a `SoftwareLogParser` instance from the `\ Kristuff\Parslog\LogParserFactory::getParser()` method:
     ```php
-    use Kristuff\Parser\LogParserFactory;
+    use  Kristuff\Parslog\LogParserFactory;
 
     $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ACCESS);
     ```
-    The `\Kristuff\Parser\LogParserFactory::getParser()` method takes the logtype as argument. Valide values (`string`) are:
+    The `\ Kristuff\Parslog\LogParserFactory::getParser()` method takes the logtype as argument. Valide values (`string`) are:
     - `LogParserFactory::TYPE_APACHE_ACCESS`      // "apache_access"
     - `LogParserFactory::TYPE_APACHE_ERROR`       // "apache_error"
     - `LogParserFactory::TYPE_APACHE_FAIL2BAN`    // "fail2ban"
@@ -172,15 +172,15 @@ Create an `ApacheAccessLogParser` instance:
 
 ```php
 // use default format and entry factory
-$parser = new \Kristuff\Parser\Software\ApacheAccessLogParser(); 
+$parser = new \ Kristuff\Parslog\Software\ApacheAccessLogParser(); 
 
 // use explicit format and default entry factory
-$parser = new \Kristuff\Parser\Software\ApacheAccessLogParser('%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"'); 
+$parser = new \ Kristuff\Parslog\Software\ApacheAccessLogParser('%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"'); 
 ```
 
 Create an `SoftwareLogParser` instance from factory:
 ```php
-use Kristuff\Parser\LogParserFactory;
+use  Kristuff\Parslog\LogParserFactory;
 
 $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ACCESS);
 ```
@@ -244,19 +244,20 @@ The library works with Apache access log format since version 2.2. Here is the f
 
 #### ApacheErrorLogParser
 
+##### Basic usage
 Create an `ApacheErrorLogParser` instance:
 
 ```php
 // use default format and entry factory
-$parser = new \Kristuff\Parser\Software\ApacheAccessLogParser(); 
+$parser = new \ Kristuff\Parslog\Software\ApacheAccessLogParser(); 
 
 // use explicit format and default entry factory
-$parser = new \Kristuff\Parser\Software\ApacheAccessLogeError('YOUR FORMAT'); 
+$parser = new \ Kristuff\Parslog\Software\ApacheAccessLogeError('YOUR FORMAT'); 
 ```
 
 Create an `SoftwareLogParser` instance from factory:
 ```php
-use Kristuff\Parser\LogParserFactory;
+use  Kristuff\Parslog\LogParserFactory;
 $parser = LogParserFactory::getParser(LogParserFactory::TYPE_APACHE_ERROR);
 ```
 
@@ -281,7 +282,7 @@ The library supports Apache error log format version 2.2 and 2.4 with same parse
 | **Yes**       | %a            | remoteIp          | Client IP address of the request (remoteIp).|
 | **Yes**       | %A            | localIp           | Local IP-address. |
 | **Yes**       | %E:           | errorCode         | APR/OS error status code and string. |
-| **Yes**       | %F:           | -                 | Source file name and line number of the log call. |
+| **Yes**       | %F:           | fileName          | Source file name and line number of the log call. |
 | **Yes**       | %l            | level             | Loglevel of the message. |
 | **Yes**       | %M            | message           | The actual log message. |
 | **Yes**       | %P            | pid               | Process ID of current process. |
@@ -297,45 +298,58 @@ The library supports Apache error log format version 2.2 and 2.4 with same parse
 
 #### SyslogParser
 
+##### Basic usage
 Create an `SyslogParser` instance:
 
 ```php
 // use default format and entry factory
-$parser = new \Kristuff\Parser\Software\SyslogParser(); 
+$parser = new \ Kristuff\Parslog\Software\SyslogParser(); 
 ```
 
 Create an `SoftwareLogParser` instance from factory:
 ```php
-use Kristuff\Parser\LogParserFactory;
+use Kristuff\Parslog\LogParserFactory;
 $parser = LogParserFactory::getParser(LogParserFactory::TYPE_SYSLOG);
 ```
+
+##### Syslog format
+The default `SyslogParser` format is  `%t %h %s%p: %m`. The field are detailed below:
 
 <details>
   <summary>Click to see the list:</summary>
 
 | Supported?    | Placeholder   | Property name     | Description |
 |:----------:   |:-------------:|---------------    | -------------|
+| **Yes**       | %t            | time              | The current time 
+| **Yes**       | %h            | hostname          | The hostname 
+| **Yes**       | %s            | service           | The service/application that raises event 
+| **Yes**       | %p            | pid               | Process ID. May be empty. 
+| **Yes**       | %m            | message           | The log message
 
 </details>
 
 
 
 
-
 #### Fail2BanLogParser
 
+##### Basic usage
 Create an `Fail2BanLogParser` instance:
 
 ```php
 // use default format and entry factory
-$parser = new \Kristuff\Parser\Software\Fail2banLogParser(); 
+$parser = new \ Kristuff\Parslog\Software\Fail2banLogParser(); 
 ```
 
 Create an `SoftwareLogParser` instance from factory:
 ```php
-use Kristuff\Parser\LogParserFactory;
+use  Kristuff\Parslog\LogParserFactory;
 $parser = LogParserFactory::getParser(LogParserFactory::TYPE_FAIL2BAN);
 ```
+
+##### Fail2Ban log format
+
+*TODO*
 
 <details>
   <summary>Click to see the list:</summary>

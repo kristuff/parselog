@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.3.0
+ * @version    0.4.0
  * @copyright  2017-2020 Kristuff
  */
 
@@ -21,7 +21,7 @@ namespace Kristuff\Parselog\Core;
 class LogEntryFactory implements LogEntryFactoryInterface
 {
     /**
-     * Creates and return an object that extends LogEntryInterface with given data
+     * Creates and return an object that implements LogEntryInterface with given data
      * 
      * @access public
      * @param array     $data        
@@ -36,14 +36,8 @@ class LogEntryFactory implements LogEntryFactoryInterface
             $entry->{$key} = trim($data[$key]);
         }
 
-        //if (isset($entry->time)) {
-        //    $stamp = strtotime($entry->time);
-        //    
-        //    if (false !== $stamp) {
-        //        $entry->stamp = $stamp;
-        //    }
-        //}
-
         return $entry;
     }
+
+
 }
