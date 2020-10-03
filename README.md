@@ -313,7 +313,7 @@ $parser = LogParserFactory::getParser(LogParserFactory::TYPE_SYSLOG);
 ```
 
 ##### Syslog format
-The default `SyslogParser` format is  `%t %h %s%p: %m`. The field are detailed below:
+The default `SyslogParser` format is  `%t %h %s%p: %m`. The fields are detailed below:
 
 <details>
   <summary>Click to see the list:</summary>
@@ -349,16 +349,31 @@ $parser = LogParserFactory::getParser(LogParserFactory::TYPE_FAIL2BAN);
 
 ##### Fail2Ban log format
 
-*TODO*
+Here are some log line examples from Fail2ban (version 0.10.2):
+
+```
+2020-08-15 10:11:15,839 fail2ban.actions        [6924]: NOTICE  [_apache_hack] Ban 1.2.3.4
+2020-08-14 10:44:57,101 fail2ban.utils          [536]: Level 39 7f4d265d09f0 -- returned 1
+```
+
+The default `Fail2BanLogParser` format is  `%t %s %p %l %j %m`. The fields are detailed below:
 
 <details>
   <summary>Click to see the list:</summary>
 
 | Supported?    | Placeholder   | Property name     | Description |
 |:----------:   |:-------------:|---------------    | -------------|
+| **Yes**       | %t            | time              | The current time. 
+| **Yes**       | %s            | service           | The service that raises event. 
+| **Yes**       | %p            | pid               | Process ID.
+| **Yes**       | %l            | level             | The level/severity of the message. Usually a keyword (INFO, NOTICE, ...) but may appear as `Level ` followed by the error number 
+| **Yes**       | %j            | jail              | The related jail (may be empty). 
+| **Yes**       | %m            | message           | The log message.
 
 </details>
 
+##### Limitations / Known issues
+- Field `time` does not register milliseconds
 
 
 # License
