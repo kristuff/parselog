@@ -40,7 +40,9 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('/var/log/', $parser->getPaths()[0]);
         $this->assertEquals('fail2ban.log', $parser->getFiles()[0]);
         $this->assertEquals('default', array_keys($parser->getKnownFormats())[0]);
-        $this->assertEquals('%t %s %p %l %m', $parser->getKnownFormats()['default']);
+        $this->assertEquals('%t %s %p %l %j %m', $parser->getKnownFormats()['default']);
+        $this->assertEquals('%t %s %p %l %j %m', $parser->getFormat());
+        
 
     }
 
