@@ -93,7 +93,7 @@ class ApacheErrorLogParser extends SoftwareLogParser
 
     /**
      * based on that example (default format for threaded MPMs)
-     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
      * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
      * 
      * 2_4_NPM + %F:
@@ -217,10 +217,11 @@ class ApacheErrorLogParser extends SoftwareLogParser
         
         // %E 	APR/OS error status code and string
         //      That column may be missing depending of error
-        $this->addPattern(' %E:', '( (?P<errorCode>\([\-\d]+\).+):)?');              
+        $this->addPattern(' %E:', '( (?P<errorCode>\([\-\d]+\)[^\[]+):)?');              
 
         // %F 	Source file name and line number of the log call
-        $this->addPattern(' %F:', '( (?P<fileName>[^\*\s\|><\?]*[\/][^\*\s\|><\?]*):)?');              
+        //$this->addPattern(' %F:', '( (?P<fileName>[^\*\s\|><\?]*[\/][^\*\s\|><\?]*):)?');              
+        $this->addPattern(' %F:', '( (?P<fileName>[^ ]+\([\d]+\)):)?');              
 
         // %M 	The actual log message
         $this->addNamedPattern('%M',  'message', '.+?');
