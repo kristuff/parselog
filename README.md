@@ -7,11 +7,6 @@
 [![Latest Stable Version](https://poser.pugx.org/kristuff/parselog/v/stable)](https://packagist.org/packages/kristuff/parselog)
 [![License](https://poser.pugx.org/kristuff/parselog/license)](https://packagist.org/packages/kristuff/parselog)
 
-- [Features](#Features) 
-- [Requirments](#Requirments) 
-- [Api Documentation](#Api-Documentation) 
-- [License](#License) 
-
 # Features
 - Generic customizable log parser
 - Predefined software log parsers: ✓ `Apache Access`, ✓ `Apache Error`, ✓ `Fail2ban`, ✓ `Syslog`
