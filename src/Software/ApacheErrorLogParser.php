@@ -217,7 +217,7 @@ class ApacheErrorLogParser extends SoftwareLogParser
         
         // %E 	APR/OS error status code and string
         //      That column may be missing depending of error
-        $this->addPattern(' %E:', '( (?P<errorCode>.+?):)?');              
+        $this->addPattern(' %E:', '( (?P<errorCode>\([\-\d]+\).+):)?');              
 
         // %F 	Source file name and line number of the log call
         $this->addPattern(' %F:', '( (?P<fileName>[^\*\s\|><\?]*[\/][^\*\s\|><\?]*):)?');              
