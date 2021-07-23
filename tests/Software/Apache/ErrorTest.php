@@ -39,11 +39,11 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $entry = $parser->parse('[Fri Aug 14 12:13:21.650367 2020] [core:info] [pid 31608] [client 79.142.76.206:59415] AH00128: File does not exist: /var/www/index.php');
         $this->assertEquals('79.142.76.206', $entry->remoteIp);
         //$this->assertEquals('', $entry->fileName);
-        $this->assertEquals('AH00128', $entry->errorCode);
+        $this->assertEquals('', $entry->errorCode);
         $this->assertEquals('core:info', $entry->level);
         $this->assertEquals('Fri Aug 14 12:13:21.650367 2020', $entry->time);
         $this->assertEquals('31608', $entry->pid);
-        $this->assertEquals('File does not exist: /var/www/index.php', $entry->message);
+        $this->assertEquals('AH00128: File does not exist: /var/www/index.php', $entry->message);
         $this->assertEquals('1597407201', $entry->stamp);
 
         $entry = $parser->parse('[Fri Aug 14 20:08:22.985375 2020] [php7:error] [pid 29669] [client 114.119.163.185:61710] script \'/var/www/domain.com/badfile.php\' not found or unable to stat');
@@ -94,13 +94,13 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $parser = new ApacheErrorLogParser(ApacheErrorLogParser::FORMAT_APACHE_2_4_MPM_EXTENDED);
         $entry = $parser->parse('[Thu Jul 22 08:19:23.627412 2021] [proxy_http:error] [pid 1723] (-102)Unknown error -102: [client 1.2.3.4:32840] AH01095: prefetch request body failed to 127.0.0.1:3000 (127.0.0.1) from 1.2.3.4 ()');
         
-        $this->assertEquals('1.2.3.4', $entry->remoteIp);
-        $this->assertEquals('', $entry->fileName);
-        $this->assertEquals('(-102)Unknown error -102', $entry->errorCode);
+        $this->assertEquals('Thu Jul 22 08:19:23.627412 2021', $entry->time);
         $this->assertEquals('proxy', $entry->module);
         $this->assertEquals('error', $entry->level);
-        $this->assertEquals('Thu Jul 22 08:19:23.627412 2021', $entry->time);
         $this->assertEquals('1723', $entry->pid);
+        $this->assertEquals('', $entry->fileName);
+        $this->assertEquals('(-102)Unknown error -102', $entry->errorCode);
+        $this->assertEquals('1.2.3.4', $entry->remoteIp);
         $this->assertEquals('AH01095: prefetch request body failed to 127.0.0.1:3000 (127.0.0.1) from 1.2.3.4 ()', $entry->message);
     }
 
