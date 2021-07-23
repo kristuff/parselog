@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-/** 
- *  ___                      _
- * | _ \ __ _  _ _  ___ ___ | | ___  __ _
- * |  _// _` || '_|(_-</ -_)| |/ _ \/ _` |
- * |_|  \__,_||_|  /__/\___||_|\___/\__, |
- *                                  |___/
+/**
+ *  ___             _
+ * | _ \__ _ _ _ __| |___  __ _
+ * |  _/ _` | '_(_-< / _ \/ _` |
+ * |_| \__,_|_| /__/_\___/\__, |
+ *                        |___/
  * 
- * (c) Kristuff <contact@kristuff.fr>
+ * (c) Kristuff <kristuff@kristuff.fr>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.5.0
- * @copyright  2017-2020 Kristuff
+ * @version    0.6.0
+ * @copyright  2017-2021 Kristuff
  */
 
 namespace Kristuff\Parselog\Software;
@@ -36,7 +36,7 @@ use Kristuff\Parselog\Core\LogEntryFactoryInterface;
  * Example (similar to the 2.2.x format):
  * ErrorLogFormat "[%t] [%l] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
  * 
- * #Example (default format for threaded MPMs):
+ * Example (default format for threaded MPMs):
  * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
  * 
  * Note that depending on error, some field may be missing from output.
@@ -48,7 +48,10 @@ use Kristuff\Parselog\Core\LogEntryFactoryInterface;
  * 2.4 (with client):   [Thu Jun 27 11:55:44.569531 2013] [core:info] [pid 4101:tid 2992634688] [client 1.2.3.4:46652] AH00128: File does not exist: <path>
  * 2.4 (no client):     [Fri Sep 25 20:23:41.378709 2020] [mpm_prefork:notice] [pid 10578] AH00169: caught SIGTERM, shutting down
  * 2.4 (perfork):       [Mon Dec 23 07:49:01.981912 2013] [:error] [pid 3790] [client 1.2.3.4:46301] script '/var/www/timthumb.php' not found or unable to
- * 
+ * 2.4 (with referer):  [Sat Oct 03 13:56:38.054651 2020] [authz_core:error] [pid 6257] [client 1.2.3.4:63032] AH01630: client denied by server configuration: /var/www/xxx.dommain.fr, referer: https://xxx.dommain.fr/
+ * 2.4 (with 'F:'):     [Fri Jul 23 21:29:32.087762 2021] [php7:error] [pid 29504] sapi_apache2.c(356): [client 1.2.3.4:64950] script '/var/www/foo.php' not found or unable to stat
+ * 2.4  ???             [Tue Oct 13 23:03:12.080268 2020] [proxy:error] [pid 29705] (20014)Internal error (specific information not available): [client 1.2.3.4:56450] AH01084: pass request body failed to [::1]:8080 (localhost)
+ * 2.4  ???             [Thu Jul 22 08:19:23.627412 2021] [proxy_http:error] [pid 1723] (-102)Unknown error -102: [client 1.2.3.4:32840] AH01095: prefetch request body failed to 127.0.0.1:3000 (127.0.0.1) from 1.2.3.4 ()
  * @see https://httpd.apache.org/docs/2.2/mod/core.html#errorlog
  * @see https://httpd.apache.org/docs/2.4/mod/core.html#errorlogformat
  * @see https://github.com/fail2ban/fail2ban/issues/268
@@ -56,32 +59,73 @@ use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 class ApacheErrorLogParser extends SoftwareLogParser
 {
     /**
-     * Inverted [client %a] %F: %E:
-     * @see https://serverfault.com/questions/1036061/apache-error-log-format-how-to-find-current-format
      */
-    const FORMAT_DEFAULT_APACHE_2_2 = '[%t] [%l] [client %a] %F: %E: %M';
+    const FORMAT_APACHE_2_2_DEFAULT = '[%t] [%l] %E: [client %a] %M';
 
     /**
-     * Inverted [client %a] %F: %E:
-     * @see https://serverfault.com/questions/1036061/apache-error-log-format-how-to-find-current-format
      */
-    const FORMAT_DEFAULT_APACHE_2_4 = '[%{u}t] [%l] [pid %P] [client %a] %F: %E: %M';
-    
+    const FORMAT_APACHE_2_2_REFERER = '[%t] [%l] %E: [client %a] %M ,\ referer\ %{Referer}i';
+
     /**
-     * #Example (default format for threaded MPMs)
-     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
-     * Inverted [client %a] %F: %E:
-     * @see https://serverfault.com/questions/1036061/apache-error-log-format-how-to-find-current-format
      */
-    const FORMAT_MPM_APACHE_2_4 = '[%{u}t] [%-m:%l] [pid %P] [client %a] %F: %E: %M';
+    const FORMAT_APACHE_2_2_EXTENDED = '[%t] [%l] %F: %E: [client %a] %M';
+
+    /**
+     */
+    const FORMAT_APACHE_2_2_REFERER_EXTENDED = '[%t] [%l] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
 
     /**
      * 
-     * Inverted [client %a] %F: %E:
-     * @see https://serverfault.com/questions/1036061/apache-error-log-format-how-to-find-current-format
      */
-    const FORMAT_MPM_TID_APACHE_2_4 = '[%{u}t] [%-m:%l] [pid %P:tid %T] [client %a] %F: %E: %M';
-     
+    const FORMAT_APACHE_2_4_DEFAULT = '[%{u}t] [%l] [pid %P] %E: [client %a] %M';
+
+    /**
+     * 2_4_DEFAULT + %F:
+     */
+    const FORMAT_APACHE_2_4_EXTENDED = '[%{u}t] [%l] [pid %P] %F: %E: [client %a] %M';
+    
+    /**
+     * based on that example (default format for threaded MPMs)
+     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+     */
+    const FORMAT_APACHE_2_4_MPM = '[%{u}t] [%-m:%l] [pid %P] %E: [client %a] %M';
+
+    /**
+     * based on that example (default format for threaded MPMs)
+     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+     * 
+     * 2_4_NPM + %F:
+     */
+    const FORMAT_APACHE_2_4_MPM_EXTENDED = '[%{u}t] [%-m:%l] [pid %P] %F: %E: [client %a] %M';
+
+    /**
+     * based on that example (default format for threaded MPMs)
+     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+     */
+    const FORMAT_APACHE_2_4_MPM_REFERER = '[%{u}t] [%-m:%l] [pid %P] %E: [client %a] %M ,\ referer\ %{Referer}i';
+
+    /**
+     * based on that example (default format for threaded MPMs)
+     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+     */
+    const FORMAT_APACHE_2_4_MPM_REFERER_EXTENDED = '[%{u}t] [%-m:%l] [pid %P] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
+
+    /**
+     * 2_4_NPM + tid %T + %F: %E:
+     */
+    const FORMAT_APACHE_2_4_MPM_TID = '[%{u}t] [%-m:%l] [pid %P:tid %T] %F: %E: [client %a] %M';
+ 
+    /**
+     * based on that example (default format for threaded MPMs)
+     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+     */
+    const FORMAT_APACHE_2_4_MPM_TID_REFERER = '[%{u}t] [%-m:%l] [pid %P:tid %T] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
+ 
     /**
      * Constructor
      * 
@@ -95,13 +139,26 @@ class ApacheErrorLogParser extends SoftwareLogParser
     {
         $this->software           = 'Apache';
         $this->prettyName         = 'Apache Error';
-        $this->defaultFormat      = self::FORMAT_DEFAULT_APACHE_2_4;
+        $this->defaultFormat      = self::FORMAT_APACHE_2_4_DEFAULT;
         
-        // 2.2 / 2.4
+        // set 2.2 format by default. Will be changed to 2.4 format, ie:
+        // $this->timeFormat        = 'D M d H:i:s.u Y';
+        // , if the format contain %{u} insted of %t  
         $this->timeFormat        = 'D M d H:i:s Y';
-        //$this->timeFormat        = 'D M d H:i:s.u Y';
 
-        $this->addFormat('default', self::FORMAT_DEFAULT_APACHE_2_4);  
+        $this->addFormat('default',                         self::FORMAT_APACHE_2_4_DEFAULT);  
+        $this->addFormat('apache2.2 default',               self::FORMAT_APACHE_2_2_DEFAULT);  
+        $this->addFormat('apache2.2 extented',              self::FORMAT_APACHE_2_2_EXTENDED);  
+        $this->addFormat('apache2.2 referer',               self::FORMAT_APACHE_2_2_REFERER);  
+        $this->addFormat('apache2.2 referer extented',      self::FORMAT_APACHE_2_2_REFERER_EXTENDED);  
+        $this->addFormat('apache2.4 default',               self::FORMAT_APACHE_2_4_DEFAULT);  
+        $this->addFormat('apache2.4 extented',              self::FORMAT_APACHE_2_4_EXTENDED);  
+        $this->addFormat('apache2.4 npm',                   self::FORMAT_APACHE_2_4_MPM);  
+        $this->addFormat('apache2.4 npm extented',          self::FORMAT_APACHE_2_4_MPM_EXTENDED);  
+        $this->addFormat('apache2.4 npm referer',           self::FORMAT_APACHE_2_4_MPM_REFERER);  
+        $this->addFormat('apache2.4 npm referer extented',  self::FORMAT_APACHE_2_4_MPM_REFERER_EXTENDED);  
+        $this->addFormat('apache2.4 npm tid',               self::FORMAT_APACHE_2_4_MPM_TID);  
+        $this->addFormat('apache2.4 npm tid referer',       self::FORMAT_APACHE_2_4_MPM_TID_REFERER);  
 
         $this->addPath("/var/log/");
         $this->addPath("/var/log/apache/");
@@ -160,20 +217,23 @@ class ApacheErrorLogParser extends SoftwareLogParser
         
         // %E 	APR/OS error status code and string
         //      That column may be missing depending of error
-        //      note we match errorCode only, let error string in %M (message)  
-        $this->addPattern(' %E:', '( (?P<errorCode>[\w\d]+):)?');              
+        $this->addPattern(' %E:', '( (?P<errorCode>\([\-\d]+\)[^\[]+):)?');              
 
         // %F 	Source file name and line number of the log call
-        $this->addPattern(' %F:', '( (?P<fileName>[^\*\s\|><\?]*[\/][^\*\s\|><\?]*):)?');              
+        //$this->addPattern(' %F:', '( (?P<fileName>[^\*\s\|><\?]*[\/][^\*\s\|><\?]*):)?');              
+        $this->addPattern(' %F:', '( (?P<fileName>[^ ]+\([\d]+\)):)?');              
 
         // %M 	The actual log message
         $this->addNamedPattern('%M',  'message', '.+?');
-        
+
+        // 
+        //$this->addNamedPattern(', referer %{Referer}i', 'referer', '', false);
+
         // now let default constructor
         parent::__construct($format, $factory);
     } 
 
-     /**
+    /**
      * Sets the log format  
      * 
      * @access public
@@ -183,13 +243,11 @@ class ApacheErrorLogParser extends SoftwareLogParser
      */
     public function setFormat(string $format): void
     {
-            parent::setFormat($format);
+        parent::setFormat($format);
 
-            // set the correct time format
-            if (strpos($this->logFormat, '%{u}t') !== false){
-                $this->timeFormat = 'D M d H:i:s.u Y';
-            }
-
+        // set the correct time format
+        if (strpos($this->logFormat, '%{u}t') !== false){
+            $this->timeFormat = 'D M d H:i:s.u Y';
+        }
     }
-
 }
