@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.6.0
+ * @version    0.7.0
  * @copyright  2017-2021 Kristuff
  */
 
@@ -72,12 +72,7 @@ class ApacheErrorLogParser extends SoftwareLogParser
 
     /**
      */
-    const FORMAT_APACHE_2_2_REFERER_EXTENDED = '[%t] [%l] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
-
-    /**
-     * 
-     */
-    const FORMAT_APACHE_2_4_REFEFER = '[%{u}t] [%l] [pid %P] %E: [client %a] %M';
+    const FORMAT_APACHE_2_2_EXTENDED_REFERER = '[%t] [%l] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
 
     /**
      * 
@@ -85,9 +80,19 @@ class ApacheErrorLogParser extends SoftwareLogParser
     const FORMAT_APACHE_2_4_DEFAULT = '[%{u}t] [%l] [pid %P] %E: [client %a] %M';
 
     /**
+     * 
+     */
+    const FORMAT_APACHE_2_4_REFEFER = '[%{u}t] [%l] [pid %P] %E: [client %a] %M ,\ referer\ %{Referer}i';
+
+    /**
      * 2_4_DEFAULT + %F:
      */
     const FORMAT_APACHE_2_4_EXTENDED = '[%{u}t] [%l] [pid %P] %F: %E: [client %a] %M';
+
+    /**
+     * 2_4_DEFAULT + %F + referer:
+     */
+    const FORMAT_APACHE_2_4_EXTENDED_REFERER = '[%{u}t] [%l] [pid %P] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
     
     /**
      * based on that example (default format for threaded MPMs)
@@ -117,7 +122,7 @@ class ApacheErrorLogParser extends SoftwareLogParser
      * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
      * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
      */
-    const FORMAT_APACHE_2_4_MPM_REFERER_EXTENDED = '[%{u}t] [%-m:%l] [pid %P] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
+    const FORMAT_APACHE_2_4_MPM_EXTENDED_REFERER = '[%{u}t] [%-m:%l] [pid %P] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
 
     /**
      * 2_4_NPM + tid %T + %F: %E:
@@ -155,13 +160,15 @@ class ApacheErrorLogParser extends SoftwareLogParser
         $this->addFormat('apache2.2 default',               self::FORMAT_APACHE_2_2_DEFAULT);  
         $this->addFormat('apache2.2 extented',              self::FORMAT_APACHE_2_2_EXTENDED);  
         $this->addFormat('apache2.2 referer',               self::FORMAT_APACHE_2_2_REFERER);  
-        $this->addFormat('apache2.2 referer extented',      self::FORMAT_APACHE_2_2_REFERER_EXTENDED);  
+        $this->addFormat('apache2.2 extented referer',      self::FORMAT_APACHE_2_2_EXTENDED_REFERER);  
         $this->addFormat('apache2.4 default',               self::FORMAT_APACHE_2_4_DEFAULT);  
         $this->addFormat('apache2.4 extented',              self::FORMAT_APACHE_2_4_EXTENDED);  
+        $this->addFormat('apache2.4 referer',               self::FORMAT_APACHE_2_4_REFEFER);  
+        $this->addFormat('apache2.4 extented referer',      self::FORMAT_APACHE_2_4_EXTENDED_REFERER);  
         $this->addFormat('apache2.4 npm',                   self::FORMAT_APACHE_2_4_MPM);  
         $this->addFormat('apache2.4 npm extented',          self::FORMAT_APACHE_2_4_MPM_EXTENDED);  
         $this->addFormat('apache2.4 npm referer',           self::FORMAT_APACHE_2_4_MPM_REFERER);  
-        $this->addFormat('apache2.4 npm referer extented',  self::FORMAT_APACHE_2_4_MPM_REFERER_EXTENDED);  
+        $this->addFormat('apache2.4 npm extented referer ', self::FORMAT_APACHE_2_4_MPM_EXTENDED_REFERER);  
         $this->addFormat('apache2.4 npm tid',               self::FORMAT_APACHE_2_4_MPM_TID);  
         $this->addFormat('apache2.4 npm tid referer',       self::FORMAT_APACHE_2_4_MPM_TID_REFERER);  
 
@@ -232,7 +239,6 @@ class ApacheErrorLogParser extends SoftwareLogParser
         $this->addNamedPattern('%M',  'message', '.+?');
 
         // referer (may be empty)
-        $this->addPattern(' ,\\ referer\\ %{Referer}i', '(, referer: (?P<referer>[^ ]+))?');
         $this->addPattern(' , referer %{Referer}i',   '(, referer: (?P<referer>[^ ]+))?');
         $this->addPattern(', referer %{Referer}i',    '(, referer: (?P<referer>[^ ]+))?');
 
