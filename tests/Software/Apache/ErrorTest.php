@@ -107,7 +107,11 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
 
     public function testWithReferer()
     {
-        $parser = new ApacheErrorLogParser(ApacheErrorLogParser::FORMAT_APACHE_2_4_MPM_REFERER);
+
+        $format = '[%{u}t] [%-m:%l] [pid %P] %E: [client %a] %M , referer %{Referer}i';
+
+        $parser = new ApacheErrorLogParser($format);
+
 
         //debug
         echo $parser->getPCRE();
