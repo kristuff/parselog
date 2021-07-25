@@ -108,9 +108,9 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
     public function testWithReferer()
     {
 
-        $format = '[%{u}t] [%-m:%l] [pid %P] %E: [client %a] %M , referer %{Referer}i';
-
-        $parser = new ApacheErrorLogParser($format);
+        //$format = '[%{u}t] [%-m:%l] [pid %P] %E: [client %a] %M , referer %{Referer}i';
+        //$format = str_replace("\\", '', $format);
+        $parser = new ApacheErrorLogParser(ApacheErrorLogParser::FORMAT_APACHE_2_4_MPM_REFERER);
 
 
         //debug
