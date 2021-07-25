@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.6.0
+ * @version    0.7.0
  * @copyright  2017-2021 Kristuff
  */
 
@@ -47,19 +47,10 @@ class RegexFactory
     const PATTERN_IP_V6_TRAILING = '(([0-9A-Fa-f]{1,4}:){1,7}:)'; // 1:1:1:1:1:1:1::
 
     
-
-    
     // pattern for one number
     const PATTERN_NUMBER     = '[0-9]';
 
     // pattren for numbers
     const PATTERN_NUMBERS    = '[0-9]+';
-
-    // TODO
-    const PATTERN_WORD     = '';
-
-    // TODO
-    const PATTERN_WORDS    = '';
-
 
 }

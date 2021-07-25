@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.6.0
+ * @version    0.7.0
  * @copyright  2017-2021 Kristuff
  */
 
@@ -143,6 +143,10 @@ class LogParser extends RegexFactory
      */
     public function setFormat(string $format): void
     {
+
+        // Remove backslashes from format
+        $format = str_replace("\\", '', $format);
+
         // store log format update IP pattern
         $this->logFormat = $format ;
         $this->updateIpPatterns();

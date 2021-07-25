@@ -35,7 +35,7 @@ class Fail2BanTest extends \PHPUnit\Framework\TestCase
         $parser = new \Kristuff\Parselog\Software\Fail2BanLogParser();
         $line = "2020-08-14 10:44:57,101 fail2ban.utils          [536]: Level 39 7f4d265d09f0 -- returned 1";
 
-echo $parser->getPCRE();
+        //echo $parser->getPCRE();
 
         $entry = $parser->parse($line);
         
