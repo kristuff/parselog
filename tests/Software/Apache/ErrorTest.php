@@ -136,7 +136,9 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('31608', $entry->pid);
         $this->assertEquals('79.142.76.206', $entry->remoteIp);
         $this->assertEquals('AH00128: File does not exist: /var/www/index.php', $entry->message);
-        $this->assertEquals('', $entry->referer);
+
+        //
+        $this->assertFalse(property_exists($entry, 'referer'));
 
 
     }
