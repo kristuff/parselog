@@ -232,9 +232,9 @@ class ApacheErrorLogParser extends SoftwareLogParser
         $this->addNamedPattern('%M',  'message', '.+?');
 
         // referer (may be empty)
-        $this->addPattern(' ,\ referer\ %{Referer}i', '((?P<referer>, referer: [^ ]+))?');
-        $this->addPattern(' , referer %{Referer}i',   '((?P<referer>, referer: [^ ]+))?');
-        $this->addPattern(', referer %{Referer}i',    '((?P<referer>, referer: [^ ]+))?');
+        $this->addPattern(' ,\ referer\ %{Referer}i', '(, referer: (?P<referer>[^ ]+))?');
+        $this->addPattern(' , referer %{Referer}i',   '(, referer: (?P<referer>[^ ]+))?');
+        $this->addPattern(', referer %{Referer}i',    '(, referer: (?P<referer>[^ ]+))?');
 
         // now let default constructor
         parent::__construct($format, $factory);
