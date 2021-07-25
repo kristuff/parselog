@@ -143,6 +143,10 @@ class LogParser extends RegexFactory
      */
     public function setFormat(string $format): void
     {
+
+        // Remove backslashes from format
+        $format = str_replace("\\", '', $format);
+
         // store log format update IP pattern
         $this->logFormat = $format ;
         $this->updateIpPatterns();
