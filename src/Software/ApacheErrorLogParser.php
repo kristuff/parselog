@@ -77,6 +77,11 @@ class ApacheErrorLogParser extends SoftwareLogParser
     /**
      * 
      */
+    const FORMAT_APACHE_2_4_REFEFER = '[%{u}t] [%l] [pid %P] %E: [client %a] %M';
+
+    /**
+     * 
+     */
     const FORMAT_APACHE_2_4_DEFAULT = '[%{u}t] [%l] [pid %P] %E: [client %a] %M';
 
     /**
@@ -226,8 +231,10 @@ class ApacheErrorLogParser extends SoftwareLogParser
         // %M 	The actual log message
         $this->addNamedPattern('%M',  'message', '.+?');
 
-        // 
-        //$this->addNamedPattern(', referer %{Referer}i', 'referer', '', false);
+        // referer (may be empty)
+        $this->addPattern(' ,\ referer\ %{Referer}i', '( (?P<referer>, referer: [^ ]+))?');
+        $this->addPattern(' , referer %{Referer}i',   '( (?P<referer>, referer: [^ ]+))?');
+        $this->addPattern(', referer %{Referer}i',    '( (?P<referer>, referer: [^ ]+))?');
 
         // now let default constructor
         parent::__construct($format, $factory);

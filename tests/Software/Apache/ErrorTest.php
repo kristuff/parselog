@@ -105,6 +105,22 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    public function testWithReferer()
+    {
+        $parser = new ApacheErrorLogParser(ApacheErrorLogParser::FORMAT_APACHE_2_4_MPM_REFERER);
+        $entry = $parser->parse('[Fri Aug 14 12:13:21.650367 2020] [core:info] [pid 31608] [client 79.142.76.206:59415] AH00128: File does not exist: /var/www/index.php, referer: https://domain.com/');
+        
+        $this->assertEquals('Fri Aug 14 12:13:21.650367 2020', $entry->time);
+        $this->assertEquals('', $entry->errorCode);
+        $this->assertEquals('core', $entry->module);
+        $this->assertEquals('info', $entry->level);
+        $this->assertEquals('31608', $entry->pid);
+        $this->assertEquals('core.c(4752)', $entry->fileName);
+        $this->assertEquals('79.142.76.206', $entry->remoteIp);
+        $this->assertEquals('AH00128: File does not exist: /var/www/index.php', $entry->message);
+        $this->assertEquals('https://domain.com/', $entry->referer);
+    }
+
     public function testApache24NPM_EXTENTED_Format()
     {
         $parser = new ApacheErrorLogParser(ApacheErrorLogParser::FORMAT_APACHE_2_4_MPM_EXTENDED);
