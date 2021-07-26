@@ -59,28 +59,46 @@ use Kristuff\Parselog\Core\LogEntryFactoryInterface;
 class ApacheErrorLogParser extends SoftwareLogParser
 {
     /**
+     * Based on that example (similar to the 2.2.x format):
+     * ErrorLogFormat "[%t] [%l] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/mod/core.html#errorlogformat
      */
     const FORMAT_APACHE_2_2_DEFAULT = '[%t] [%l] %E: [client %a] %M';
 
     /**
+     * Based on that example (similar to the 2.2.x format):
+     * ErrorLogFormat "[%t] [%l] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/mod/core.html#errorlogformat
+     * 
+     * 2_2_DEFAULT + referer
      */
     const FORMAT_APACHE_2_2_REFERER = '[%t] [%l] %E: [client %a] %M ,\ referer\ %{Referer}i';
 
     /**
+     * Based on that example (similar to the 2.2.x format):
+     * ErrorLogFormat "[%t] [%l] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/mod/core.html#errorlogformat
+     * 
+     * 2_2_DEFAULT + %F: 
      */
     const FORMAT_APACHE_2_2_EXTENDED = '[%t] [%l] %F: %E: [client %a] %M';
 
     /**
+     * Based on that example (similar to the 2.2.x format):
+     * ErrorLogFormat "[%t] [%l] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * @see https://httpd.apache.org/docs/2.4/mod/core.html#errorlogformat
+     * 
+     * 2_2_DEFAULT + %F: + referer
      */
     const FORMAT_APACHE_2_2_EXTENDED_REFERER = '[%t] [%l] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
 
     /**
-     * 
+     * Since apache 2.4, time includes milliseconds [%{u}t] and pid seems to be here by default.
      */
     const FORMAT_APACHE_2_4_DEFAULT = '[%{u}t] [%l] [pid %P] %E: [client %a] %M';
 
     /**
-     * 
+     * 2_4_DEFAULT + referer
      */
     const FORMAT_APACHE_2_4_REFEFER = '[%{u}t] [%l] [pid %P] %E: [client %a] %M ,\ referer\ %{Referer}i';
 
@@ -90,20 +108,23 @@ class ApacheErrorLogParser extends SoftwareLogParser
     const FORMAT_APACHE_2_4_EXTENDED = '[%{u}t] [%l] [pid %P] %F: %E: [client %a] %M';
 
     /**
-     * 2_4_DEFAULT + %F + referer:
+     * 2_4_DEFAULT + %F: + referer
      */
     const FORMAT_APACHE_2_4_EXTENDED_REFERER = '[%{u}t] [%l] [pid %P] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
     
     /**
-     * based on that example (default format for threaded MPMs)
+     * Based on that example (default format for threaded MPMs)
      * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
      * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+     * 
+     * 2_4_DEFAULT + %m
+     * Note: No %F: (%7F: in example above, filtered to level 7 or more), no referer
      */
     const FORMAT_APACHE_2_4_MPM = '[%{u}t] [%-m:%l] [pid %P] %E: [client %a] %M';
 
     /**
-     * based on that example (default format for threaded MPMs)
-     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
+     * Based on that example (default format for threaded MPMs)
+     * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
      * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
      * 
      * 2_4_NPM + %F:
@@ -111,9 +132,11 @@ class ApacheErrorLogParser extends SoftwareLogParser
     const FORMAT_APACHE_2_4_MPM_EXTENDED = '[%{u}t] [%-m:%l] [pid %P] %F: %E: [client %a] %M';
 
     /**
-     * based on that example (default format for threaded MPMs)
+     * Based on that example (default format for threaded MPMs)
      * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
      * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+     * 
+     * 2_4_NPM + %F: + referer
      */
     const FORMAT_APACHE_2_4_MPM_REFERER = '[%{u}t] [%-m:%l] [pid %P] %E: [client %a] %M ,\ referer\ %{Referer}i';
 
@@ -125,14 +148,16 @@ class ApacheErrorLogParser extends SoftwareLogParser
     const FORMAT_APACHE_2_4_MPM_EXTENDED_REFERER = '[%{u}t] [%-m:%l] [pid %P] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
 
     /**
-     * 2_4_NPM + tid %T + %F: %E:
+     * 2_4_NPM + tid %T + %F:
      */
     const FORMAT_APACHE_2_4_MPM_TID = '[%{u}t] [%-m:%l] [pid %P:tid %T] %F: %E: [client %a] %M';
  
     /**
-     * based on that example (default format for threaded MPMs)
+     * Based on that example (default format for threaded MPMs)
      * ErrorLogFormat "[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i"
      * @see https://httpd.apache.org/docs/2.4/fr/mod/core.html#errorlog
+     * 
+     * 2_4_NPM + tid %T + %F: + referer
      */
     const FORMAT_APACHE_2_4_MPM_TID_REFERER = '[%{u}t] [%-m:%l] [pid %P:tid %T] %F: %E: [client %a] %M ,\ referer\ %{Referer}i';
  
@@ -153,7 +178,7 @@ class ApacheErrorLogParser extends SoftwareLogParser
         
         // set 2.2 format by default. Will be changed to 2.4 format, ie:
         // $this->timeFormat        = 'D M d H:i:s.u Y';
-        // , if the format contain %{u} insted of %t  
+        // , if the format contains %{u} instead of %t  
         $this->timeFormat        = 'D M d H:i:s Y';
 
         $this->addFormat('default',                         self::FORMAT_APACHE_2_4_DEFAULT);  
@@ -165,12 +190,12 @@ class ApacheErrorLogParser extends SoftwareLogParser
         $this->addFormat('apache2.4 extented',              self::FORMAT_APACHE_2_4_EXTENDED);  
         $this->addFormat('apache2.4 referer',               self::FORMAT_APACHE_2_4_REFEFER);  
         $this->addFormat('apache2.4 extented referer',      self::FORMAT_APACHE_2_4_EXTENDED_REFERER);  
-        $this->addFormat('apache2.4 npm',                   self::FORMAT_APACHE_2_4_MPM);  
-        $this->addFormat('apache2.4 npm extented',          self::FORMAT_APACHE_2_4_MPM_EXTENDED);  
-        $this->addFormat('apache2.4 npm referer',           self::FORMAT_APACHE_2_4_MPM_REFERER);  
-        $this->addFormat('apache2.4 npm extented referer ', self::FORMAT_APACHE_2_4_MPM_EXTENDED_REFERER);  
-        $this->addFormat('apache2.4 npm tid',               self::FORMAT_APACHE_2_4_MPM_TID);  
-        $this->addFormat('apache2.4 npm tid referer',       self::FORMAT_APACHE_2_4_MPM_TID_REFERER);  
+        $this->addFormat('apache2.4 mpm',                   self::FORMAT_APACHE_2_4_MPM);  
+        $this->addFormat('apache2.4 mpm extented',          self::FORMAT_APACHE_2_4_MPM_EXTENDED);  
+        $this->addFormat('apache2.4 mpm referer',           self::FORMAT_APACHE_2_4_MPM_REFERER);  
+        $this->addFormat('apache2.4 mpm extented referer ', self::FORMAT_APACHE_2_4_MPM_EXTENDED_REFERER);  
+        $this->addFormat('apache2.4 mpm tid',               self::FORMAT_APACHE_2_4_MPM_TID);  
+        $this->addFormat('apache2.4 mpm tid referer',       self::FORMAT_APACHE_2_4_MPM_TID_REFERER);  
 
         $this->addPath("/var/log/");
         $this->addPath("/var/log/apache/");
