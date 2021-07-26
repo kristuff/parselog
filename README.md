@@ -16,6 +16,17 @@
 - PHP >= 7.1
 - Composer (for install)
 
+# Install
+
+Deploy with composer:
+
+```.language-json
+...
+"require": {
+    "kristuff/abuseipdb": "^0.7.1-stable"
+},
+```
+
 # Resources
 - [Api documentation](https://kristuff.fr/projects/parselog/doc)
 
