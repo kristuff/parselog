@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.7.0
+ * @version    0.7.1
  * @copyright  2017-2021 Kristuff
  */
 
@@ -142,7 +142,7 @@ class LogParser extends RegexFactory
      * @return void
      */
     public function setFormat(string $format): void
-    {
+    {   
 
         // Remove backslashes from format
         $format = str_replace("\\", '', $format);
