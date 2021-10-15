@@ -56,7 +56,7 @@ class MariadbErrorLogParser extends SoftwareLogParser
 
         $this->addPattern('%time',  '(?P<time>([0-9\-]+\s+[0-9:]+)');
         $this->addPattern('%tid',   '(?P<tid>(\d+|))');
-        $this->addPattern('%level',  '\[(?P<level>.+?\])');
+        $this->addPattern('%level',  '\[(?P<level>.+?)\]');
         $this->addPattern('%message',  '(?P<message>.+)');
 
         parent::__construct($format, $factory);
