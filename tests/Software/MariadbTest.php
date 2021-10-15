@@ -6,7 +6,7 @@ class MariadbTest extends \PHPUnit\Framework\TestCase
 {
     public function testFormat()
     {
-        $parser = new \Kristuff\Parselog\Software\SyslogParser();
+        $parser = new \Kristuff\Parselog\Software\MariadbErrorLogParser();
 
         $entry = $parser->parse("2021-10-15  5:04:02 3163 [Warning] Aborted connection 3163 to db: 'xxx' user: 'xxx' host: 'localhost' (Got timeout reading communication packets)");
         $this->assertEquals('2021-10-15  5:04:02', $entry->time);
