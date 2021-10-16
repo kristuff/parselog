@@ -46,6 +46,15 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 
     }
 
+
+    public function testMaruaDbFactory()
+    {
+        $parser = LogParserFactory::getParser(LogParserFactory::TYPE_MARIADB_ERROR);
+        $this->assertTrue($parser instanceof \Kristuff\Parselog\Software\MariadbErrorLogParser);
+        $this->assertEquals('MariaDB', $parser->getSoftware());
+        $this->assertEquals('MariaDB Error', $parser->getPrettyName());
+    }
+
     public function testWrongtype()
     {
         $parser = LogParserFactory::getParser('wrong type');

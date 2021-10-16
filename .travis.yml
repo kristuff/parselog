@@ -1,4 +1,4 @@
-#v 0.7.1
+#v 0.7.2
 language: php
 
 php:
@@ -6,6 +6,7 @@ php:
   - '7.2'
   - '7.3'
   - '7.4'
+  - '8.0'
   
 before_install:
     - composer install
@@ -13,5 +14,5 @@ before_install:
 script: 
 - vendor/bin/phpunit --verbose --debug --configuration phpunit.xml --coverage-text --coverage-clover=coverage.xml
 
-after_success:
- - bash <(curl -s https://codecov.io/bash)
+#after_success:
+# - bash <(curl -s https://codecov.io/bash)

@@ -1,15 +1,14 @@
 # Parselog
-> based on [kassner/log-parser](https://github.com/kassner/log-parser) primarily designed to parse web access logs, **Parselog** extends to other logs like web error, syslog, fail2ban, ... *(in progress)*
+> based on [kassner/log-parser](https://github.com/kassner/log-parser) primarily designed to parse web access logs, **Parselog** extends to other logs like apache error, syslog, fail2ban, MariaDB error ... *(in progress)*
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kristuff/parselog/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kristuff/parselog/?branch=master)
-[![Build Status](https://travis-ci.com/kristuff/parselog.svg?branch=master)](https://travis-ci.com/kristuff/parselog)
-[![codecov](https://codecov.io/gh/kristuff/parselog/branch/master/graph/badge.svg)](https://codecov.io/gh/kristuff/parselog)
+[![Build Status](https://app.travis-ci.com/kristuff/parselog.svg?branch=master)](https://app.travis-ci.com/kristuff/parselog)
 [![Latest Stable Version](https://poser.pugx.org/kristuff/parselog/v/stable)](https://packagist.org/packages/kristuff/parselog)
 [![License](https://poser.pugx.org/kristuff/parselog/license)](https://packagist.org/packages/kristuff/parselog)
 
 # Features
 - Generic customizable log parser
-- Predefined software log parsers: ✓ `Apache Access`, ✓ `Apache Error`, ✓ `Fail2ban`, ✓ `Syslog`
+- Predefined software log parsers: ✓ `Apache Access`, ✓ `Apache Error`, ✓ `Fail2ban`, ✓ `Syslog`, ✓ `MariaDB Error`
 - IPv4 & IPv6 recognition patterns
 
 # Requirments
@@ -23,7 +22,7 @@ Deploy with composer:
 ```.language-json
 ...
 "require": {
-    "kristuff/abuseipdb": "^0.7.1-stable"
+    "kristuff/abuseipdb": "^0.7.2-stable"
 },
 ```
 

@@ -12,7 +12,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version    0.7.0
+ * @version    0.7.2
  * @copyright  2017-2021 Kristuff
  */
 
@@ -30,6 +30,7 @@ class LogParserFactory
     const TYPE_APACHE_ERROR     = 'apache_error';
     const TYPE_SYSLOG           = 'syslog';
     const TYPE_FAIL2BAN         = 'fail2ban';
+    const TYPE_MARIADB_ERROR    = 'mariadb_error';
 
     /** 
      * Gets a new LogParser instance based on given logType
@@ -58,6 +59,10 @@ class LogParserFactory
             case self::TYPE_FAIL2BAN:
                 return new \Kristuff\Parselog\Software\Fail2BanLogParser($format, $factory); 
 
+            case self::TYPE_MARIADB_ERROR:
+                return new \Kristuff\Parselog\Software\MariadbErrorLogParser($format, $factory); 
+
+                
         }
         return null;
     }
