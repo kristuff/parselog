@@ -48,8 +48,8 @@ class MariadbErrorLogParser extends SoftwareLogParser
         $this->software       = 'MariaDB';
         $this->prettyName     = 'MariaDB Error';
 
-        $this->addFormat('default', '%time %tid %level %message');
-        $this->defaultFormat      = '%time %tid %level %message';
+        $this->addFormat('default', '%t %i %l %m');
+        $this->defaultFormat      = '%t %i %l %m';
         
         $this->addPath("/var/log/mysql/");
         $this->addFile("error.log");
